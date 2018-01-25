@@ -509,6 +509,7 @@ int dataLength, int *outSize, double min, double max)
 				type[i] = intvRadius-state;
 				pred = pred - state*interval;
 			}
+			printf("%d\n",type[i]);
 			listAdd_double(last3CmprsData, pred);			
 			continue;
 		}
