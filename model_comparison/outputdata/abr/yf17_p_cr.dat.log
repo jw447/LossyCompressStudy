@@ -1,0 +1,25 @@
+...............
+960
+...............
+960
+cfgFile=sz.config
+[SZ] Reading SZ configuration file (sz.config) ...
+sz_compress
+SZ_compress_args
+SZ_double
+SZ_compress_args_double
+min:86088.187500
+max:120454.671875
+ebm:0
+3-Not PW
+checkRadius=0.008191
+interval=0.000002
+intvRadius=4096
+intvCapacity=8192
+0.007812
+8002
+timecost, 0.001183, seconds
+done
+7680
+++++++++++++++
+sz compression ratio, 2.47 

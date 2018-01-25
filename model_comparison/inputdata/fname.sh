@@ -1,0 +1,9 @@
+mv astro.dat astro_o.dat
+mv blast2-pres.dat blast2_p_o.dat
+mv bump_dense.dat bump_o.dat
+mv dpot.dat dpot_o.dat
+mv eddy_velx_f4.dat eddy_o.dat
+mv fish.dat fish_o.dat
+mv sedov-pres.dat sedov_p_o.dat
+mv yf17_pres.dat yf17_p_o.dat
+mv yf17_temp.dat yf17_t_o.dat
