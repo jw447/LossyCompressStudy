@@ -287,8 +287,8 @@ int dataLength, double realPrecision, double valueRangeSize, double medianValue_
 			resiBitLengthArray->array, resiBitLengthArray->size, 
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, NULL, 0, 0);
 	
-//	printf("exactDataNum=%d, expSegmentsInBytes_size=%d, exactMidByteArray->size=%d,resiBitLengthArray->size=%d\n", 
-//			exactDataNum, expSegmentsInBytes_size, exactMidByteArray->size, resiBitLengthArray->size);
+	//	printf("exactDataNum=%d, expSegmentsInBytes_size=%d, exactMidByteArray->size=%d,resiBitLengthArray->size=%d\n", 
+	//			exactDataNum, expSegmentsInBytes_size, exactMidByteArray->size, resiBitLengthArray->size);
 	
 	//free memory
 	free_DBA(resiBitLengthArray);
@@ -540,7 +540,7 @@ TightDataPointStorageD* SZ_compress_double_2D_MDQ(double *oriData, int r1, int r
 			resiBitLengthArray->array, resiBitLengthArray->size, 
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, NULL, 0, 0);
 
-/*	int sum =0;
+	/*	int sum =0;
 	for(i=0;i<dataLength;i++)
 		if(type[i]==0) sum++;
 	printf("opt_quantizations=%d, exactDataNum=%d, sum=%d\n",quantization_intervals, exactDataNum, sum);
@@ -549,11 +549,11 @@ TightDataPointStorageD* SZ_compress_double_2D_MDQ(double *oriData, int r1, int r
 		printf("%d ", type[i]);
 	printf("\n");*/
 
-//	printf("exactDataNum=%d, expSegmentsInBytes_size=%d, exactMidByteArray->size=%d,resiBitLengthArray->size=%d\n", 
-//			exactDataNum, expSegmentsInBytes_size, exactMidByteArray->size, resiBitLengthArray->size);
-	
-//	for(i = 3800;i<3844;i++)
-//		printf("exactLeadNumArray->array[%d]=%d\n",i,exactLeadNumArray->array[i]);
+	//	printf("exactDataNum=%d, expSegmentsInBytes_size=%d, exactMidByteArray->size=%d,resiBitLengthArray->size=%d\n", 
+	//			exactDataNum, expSegmentsInBytes_size, exactMidByteArray->size, resiBitLengthArray->size);
+		
+	//	for(i = 3800;i<3844;i++)
+	//		printf("exactLeadNumArray->array[%d]=%d\n",i,exactLeadNumArray->array[i]);
 	
 	//free memory
 	free_DBA(resiBitLengthArray);
@@ -904,11 +904,11 @@ TightDataPointStorageD* SZ_compress_double_3D_MDQ(double *oriData, int r1, int r
 			resiBitLengthArray->array, resiBitLengthArray->size, 
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, NULL, 0, 0);
 
-//	printf("exactDataNum=%d, expSegmentsInBytes_size=%d, exactMidByteArray->size=%d,resiBitLengthArray->size=%d\n",
-//			exactDataNum, expSegmentsInBytes_size, exactMidByteArray->size, resiBitLengthArray->size);
+	//	printf("exactDataNum=%d, expSegmentsInBytes_size=%d, exactMidByteArray->size=%d,resiBitLengthArray->size=%d\n",
+	//			exactDataNum, expSegmentsInBytes_size, exactMidByteArray->size, resiBitLengthArray->size);
 
-//	for(i = 3800;i<3844;i++)
-//		printf("exactLeadNumArray->array[%d]=%d\n",i,exactLeadNumArray->array[i]);
+	//	for(i = 3800;i<3844;i++)
+	//		printf("exactLeadNumArray->array[%d]=%d\n",i,exactLeadNumArray->array[i]);
 
 	//free memory
 	free_DBA(resiBitLengthArray);

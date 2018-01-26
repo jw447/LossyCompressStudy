@@ -363,7 +363,7 @@ void decompressDataSeries_double_2D(double** data, int r1, int r2, TightDataPoin
 	//type = tdps->typeArray;
 	decode_withTree(tdps->typeArray, dataSeriesLength, type);
 
-/*	for(i=0;i<dataSeriesLength;i++)
+	/*	for(i=0;i<dataSeriesLength;i++)
 		printf("%d ", type[i]);
 	printf("\n");*/
 
@@ -661,7 +661,7 @@ void decompressDataSeries_double_3D(double** data, int r1, int r2, int r3, Tight
 	// leadNum
 	int dataSeriesLength = r1*r2*r3;
 	int r23 = r2*r3;
-//	printf ("%d %d %d\n", r1, r2, r3);
+	//	printf ("%d %d %d\n", r1, r2, r3);
 
 	unsigned char* leadNum;
 	double realPrecision = tdps->realPrecision;

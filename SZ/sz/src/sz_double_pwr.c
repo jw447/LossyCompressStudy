@@ -514,7 +514,7 @@ int dataLength, int *outSize, double min, double max)
 				type[i] = intvRadius-state;
 				pred = pred - state*interval;
 			}
-			printf("%d\n",type[i]);
+			// printf("%d\n",type[i]);
 			listAdd_double(last3CmprsData, pred);			
 			continue;
 		}
@@ -525,7 +525,8 @@ int dataLength, int *outSize, double min, double max)
 			computeReqLength_double(realPrecision, radExpo, &reqLength, &medianValue);				
 			reqBytesLength = reqLength/8;
 			resiBitsLength = reqLength%8;
-			updateReqLength = 1;		
+			updateReqLength = 1;
+			// printf("reqBytesLength=%d\n",reqBytesLength);		
 		}
 		
 		miss = miss + 1;
@@ -543,12 +544,13 @@ int dataLength, int *outSize, double min, double max)
 	printf("hit: %d\n",hit);
 	printf("miss: %d\n",miss);
 		
-//	char* expSegmentsInBytes;
-//	int expSegmentsInBytes_size = convertESCToBytes(esc, &expSegmentsInBytes);
+
+	//	char* expSegmentsInBytes;
+	//	int expSegmentsInBytes_size = convertESCToBytes(esc, &expSegmentsInBytes);
 	int exactDataNum = exactLeadNumArray->size;
 	
 	TightDataPointStorageD* tdps;
-			
+	// printf("2\n");
 	new_TightDataPointStorageD(&tdps, dataLength, exactDataNum, 
 			type, exactMidByteArray->array, exactMidByteArray->size,  
 			exactLeadNumArray->array,  
@@ -556,17 +558,18 @@ int dataLength, int *outSize, double min, double max)
 			resiBitLengthArray->array, resiBitLengthArray->size, 
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, pwrErrBoundBytes, pwrErrBoundBytes_size, radExpo);
 
-//sdi:Debug
-/*	int sum =0;
-	for(i=0;i<dataLength;i++)
-		if(type[i]==0) sum++;
-	printf("opt_quantizations=%d, exactDataNum=%d, sum=%d\n",quantization_intervals, exactDataNum, sum);
-*/
-//	writeShortData(type, dataLength, "compressStateBytes.sb");
-//	unsigned short type_[dataLength];
-//	SZ_Reset();
-//	decode_withTree(tdps->typeArray, tdps->typeArray_size, type_);	
-//	printf("tdps->typeArray_size=%d\n", tdps->typeArray_size);
+	// printf("1\n");
+	//sdi:Debug
+	/*	int sum =0;
+		for(i=0;i<dataLength;i++)
+			if(type[i]==0) sum++;
+		printf("opt_quantizations=%d, exactDataNum=%d, sum=%d\n",quantization_intervals, exactDataNum, sum);
+	*/
+	//	writeShortData(type, dataLength, "compressStateBytes.sb");
+	//	unsigned short type_[dataLength];
+	//	SZ_Reset();
+	//	decode_withTree(tdps->typeArray, tdps->typeArray_size, type_);	
+	//	printf("tdps->typeArray_size=%d\n", tdps->typeArray_size);
 		
 	//free memory
 	free_DBA(resiBitLengthArray);
@@ -576,6 +579,7 @@ int dataLength, int *outSize, double min, double max)
 		
 	convertTDPStoFlatBytes_double(tdps, newByteData, outSize);
 	
+
 	int doubleSize=sizeof(double);
 	if(*outSize>dataLength*doubleSize)
 	{

@@ -86,6 +86,7 @@ node qremove()
  * */
 void build_code(node n, int len, unsigned long out1, unsigned long out2)
 {
+	// printf("build_code\n");
 	if (n->t) {
 		code[n->c] = (unsigned long*)malloc(2*sizeof(unsigned long));
 		if(len<=64)
@@ -144,10 +145,11 @@ void init(int *s, int length)
  
 	build_code(qq[1], 0, 0, 0);
 	free(freq);
-}
+};
  
 void encode(int *s, int length, unsigned char *out, int *outSize)
 {
+	// printf("encode\n");
 	int i = 0;
 	unsigned char curByte, bitSize = 0, byteSize, byteSizep;
 	int state;
@@ -247,8 +249,8 @@ void encode(int *s, int length, unsigned char *out, int *outSize)
 			}
 		}
 	}
-//	for(i=0;i<stateNum;i++)
-//		if(code[i]!=NULL) free(code[i]);
+	//	for(i=0;i<stateNum;i++)
+	//		if(code[i]!=NULL) free(code[i]);
 	/*printf("max bitsize = %d\n", maxBitSize);
 	printf("bitSize21 ratio = %f\n", ((float)bitSize21)/length);
 	printf("bitSize32 ratio = %f\n", ((float)bitSize32)/length);
@@ -286,7 +288,7 @@ void decode(unsigned char *s, int targetLength, node t, int *out)
 			count++;
 		}
 	}
-//	putchar('\n');
+	//	putchar('\n');
 	if (t != n) printf("garbage input\n");
 	return;
 } 
@@ -637,8 +639,9 @@ void encode_withTree(int *s, int length, unsigned char **out, int *outSize)
 	for (i = 0; i < stateNum; i++)
 		if (code[i]) nodeCount++;
 	nodeCount = nodeCount*2-1;
+	printf("nodecount=%d\n",nodeCount);
 	unsigned int treeByteSize = convert_HuffTree_to_bytes_anyStates(nodeCount, &treeBytes);
-	//printf("treeByteSize=%d\n", treeByteSize);
+	printf("treeByteSize=%d\n", treeByteSize);
 	*out = (unsigned char*)malloc(length*sizeof(int)+treeByteSize);
 	intToBytes_bigEndian(buffer, nodeCount);
 	memcpy(*out, buffer, 4);
@@ -647,7 +650,8 @@ void encode_withTree(int *s, int length, unsigned char **out, int *outSize)
 	int enCodeSize = 0;
 	encode(s, length, *out+4+treeByteSize, &enCodeSize);
 	*outSize = 4+treeByteSize+enCodeSize;
-	
+	printf("enCodeSize=%d\n", enCodeSize);
+	// printf("outSize=%d\n", outSize);
 	//unsigned short state[length];
 	//decode(*out+4+treeByteSize, enCodeSize, qqq[0], state);
 	//printf("dataSeriesLength=%d",length );
@@ -664,7 +668,7 @@ void decode_withTree(unsigned char *s, int targetLength, int *out)
 	node root = reconstruct_HuffTree_from_bytes_anyStates(s+4, nodeCount);
 	
 	//sdi: Debug
-/*	build_code(root, 0, 0, 0);
+	/*	build_code(root, 0, 0, 0);
 	int i;
 	unsigned long code_1, code_2;
 	for (i = 0; i < stateNum; i++)

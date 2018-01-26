@@ -142,8 +142,8 @@ runsz(){
     echo $inputFILESIZE
     echo $outputFILESIZE
     echo "$inputFILESIZE $outputFILESIZE" | awk '{printf "sz compression ratio, %.2f \n", $1/$2}'
-    /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_decompress ${cfg} $i.sz $sze
-    ../compareData $i $i.sz.out $sze
+    # /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_decompress ${cfg} $i.sz $sze
+    # ../compareData $i $i.sz.out $sze
 }
 
 while getopts ":c:i:t:" o; do
