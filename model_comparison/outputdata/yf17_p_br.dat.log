@@ -882,12 +882,12 @@ cfgFile=sz.config
 8199
 8145
 8304
-timecost, 0.004430, seconds
+timecost, 0.005566, seconds
 done
 7744
 3712
 sz compression ratio, 2.09 
-timecost, 0.000088, second
+timecost, 0.000068, second
 done
 Max absolute error = 0
 Max relative error = 0
