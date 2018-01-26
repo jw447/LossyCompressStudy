@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
 	printf("Error: file %s cannot be read!\n", oriFilePath);
 	exit(0);
     }
-   
+    
     int outSize;
     cost_start(); 
     unsigned char *bytes = SZ_compress(SZ_DOUBLE, data, &outSize, r5, r4, r3, r2, r1);

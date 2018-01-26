@@ -399,6 +399,7 @@ void SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(unsigned char** newByteData, 
 int dataLength, int *outSize, double min, double max)
 {
 	SZ_Reset();	
+	printf("datalength=%d\n",dataLength);
 	int pwrLength = dataLength%segment_size==0?dataLength/segment_size:dataLength/segment_size+1;
 	double* pwrErrBound = (double*)malloc(sizeof(double)*pwrLength);
 	int pwrErrBoundBytes_size = sizeof(unsigned char)*pwrLength*2;
@@ -483,6 +484,9 @@ int dataLength, int *outSize, double min, double max)
 	double interval = 2*realPrecision;
 	int updateReqLength = 0; //a marker: 1 means already updated
 	
+	int hit = 0;
+	int miss = 0;
+
 	for(i=2;i<dataLength;i++)
 	{
 		curData = spaceFillingValue[i];
@@ -497,8 +501,9 @@ int dataLength, int *outSize, double min, double max)
 		//pred = last3CmprsData[0];
 		predAbsErr = fabs(curData - pred);	
 		if(predAbsErr<checkRadius)
-		{
+		{	
 			state = (predAbsErr/realPrecision+1)/2;
+			hit = hit + 1;
 			if(curData>=pred)
 			{
 				type[i] = intvRadius+state;
@@ -523,6 +528,7 @@ int dataLength, int *outSize, double min, double max)
 			updateReqLength = 1;		
 		}
 		
+		miss = miss + 1;
 		type[i] = 0;
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
 		
@@ -533,6 +539,9 @@ int dataLength, int *outSize, double min, double max)
 
 		listAdd_double(last3CmprsData, vce->data);	
 	}//end of for
+
+	printf("hit: %d\n",hit);
+	printf("miss: %d\n",miss);
 		
 //	char* expSegmentsInBytes;
 //	int expSegmentsInBytes_size = convertESCToBytes(esc, &expSegmentsInBytes);

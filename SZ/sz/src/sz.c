@@ -324,6 +324,10 @@ int R5, int R4, int R3, int R2, int R1)
 
 unsigned char *SZ_compress(int dataType, void *data, int *outSize, int r5, int r4, int r3, int r2, int r1)
 {	
+	int pointCount;
+	pointCount = computeDataLength(r5,r4,r3,r2,r1);
+	printf("point count: %d\n",pointCount);
+	
 	unsigned char *newByteData = SZ_compress_args(dataType, data, outSize, errorBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
 	return newByteData;
 }
