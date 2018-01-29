@@ -581,15 +581,15 @@ int dataLength, int *outSize, double min, double max)
 
 	// save type* *********************************************/
 	/* open the file for writing*/
-	fp = fopen ("type.txt","w+");
-
-	/* write 10 lines of text into the file stream*/
-	for(i = 1; i <= dataLength;i++){
-		fprintf (fp, "%d\n",type[i]);
-	}
-
-	/* close the file*/
-	fclose (fp);
+	// FILE* fp = fopen ("type.txt","w+");
+  //
+	// /* write 10 lines of text into the file stream*/
+	// for(i = 1; i <= dataLength;i++){
+	// 	fprintf (fp, "%d\n",type[i]);
+	// }
+  //
+	// /* close the file*/
+	// fclose (fp);
 	/**********************************************************/
 
 	int doubleSize=sizeof(double);
