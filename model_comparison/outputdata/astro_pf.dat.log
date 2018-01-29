@@ -7,7 +7,7 @@ miss: 0
 nodecount=11
 treeByteSize=78
 enCodeSize=87
-timecost, 0.004861, seconds
+timecost, 0.003743, seconds
 done
 5240
 143

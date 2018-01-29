@@ -7,7 +7,7 @@
  *      See COPYRIGHT in top-level directory.
  */
 
-#include <stdlib.h> 
+#include <stdlib.h>
 #include <stdio.h>
 #include <sz.h>
 #include <CompressElement.h>
@@ -33,7 +33,7 @@ inline void listAdd_float(float last3CmprsData[3], float value)
 
 /**
  * Determine whether the prediction value minErr is valid.
- * 
+ *
  * */
 int validPrediction_double(double minErr, double precision)
 {
@@ -51,7 +51,7 @@ int validPrediction_float(float minErr, float precision)
 		return 0;
 }
 
-void new_LossyCompressionElement(LossyCompressionElement *lce, int leadingNum, unsigned char* intMidBytes, 
+void new_LossyCompressionElement(LossyCompressionElement *lce, int leadingNum, unsigned char* intMidBytes,
 int intMidBytes_Length, int resiMidBitsLength, int resiBits)
 {
 	lce->leadingZeroBytes = leadingNum; //0,1,2,or 3
@@ -61,7 +61,7 @@ int intMidBytes_Length, int resiMidBitsLength, int resiBits)
 	lce->residualMidBits = resiBits;
 }
 
-void updateLossyCompElement_Double(unsigned char* curBytes, unsigned char* preBytes, 
+void updateLossyCompElement_Double(unsigned char* curBytes, unsigned char* preBytes,
 		int reqBytesLength, int resiBitsLength,  LossyCompressionElement *lce)
 {
 	int i, resiIndex, intMidBytes_Length = 0;
@@ -87,7 +87,7 @@ void updateLossyCompElement_Double(unsigned char* curBytes, unsigned char* preBy
 	lce->residualMidBits = resiBits;
 }
 
-void updateLossyCompElement_Float(unsigned char* curBytes, unsigned char* preBytes, 
+void updateLossyCompElement_Float(unsigned char* curBytes, unsigned char* preBytes,
 		int reqBytesLength, int resiBitsLength,  LossyCompressionElement *lce)
 {
 	int i, resiIndex, intMidBytes_Length = 0;
