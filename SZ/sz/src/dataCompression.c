@@ -30,7 +30,7 @@ double computeRangeSize_double(double* oriData, int size, double* valueRangeSize
 		else if(max<data)
 			max = data;
 	}
-	
+
 	*valueRangeSize = max - min;
 	*medianValue = min + *valueRangeSize/2;
 	return min;
@@ -49,7 +49,7 @@ float computeRangeSize_float(float* oriData, int size, float* valueRangeSize, fl
 		else if(max<data)
 			max = data;
 	}
-	
+
 	*valueRangeSize = max - min;
 	*medianValue = min + *valueRangeSize/2;
 	return min;
@@ -92,7 +92,7 @@ double getRealPrecision_double(double valueRangeSize, int errBoundMode, double a
 	int state = SZ_SCES;
 	double precision = 0;
 	if(errBoundMode==ABS)
-		precision = absErrBound; 
+		precision = absErrBound;
 	else if(errBoundMode==REL)
 		precision = relBoundRatio*valueRangeSize;
 	else if(errBoundMode==ABS_AND_REL)
@@ -115,7 +115,7 @@ double getRealPrecision_float(float valueRangeSize, int errBoundMode, double abs
 	int state = SZ_SCES;
 	double precision = 0;
 	if(errBoundMode==ABS)
-		precision = absErrBound; 
+		precision = absErrBound;
 	else if(errBoundMode==REL)
 		precision = relBoundRatio*valueRangeSize;
 	else if(errBoundMode==ABS_AND_REL)
@@ -142,11 +142,11 @@ void symTransform_8bytes(unsigned char data[8])
 	tmp = data[1];
 	data[1] = data[6];
 	data[6] = tmp;
-	
+
 	tmp = data[2];
 	data[2] = data[5];
 	data[5] = tmp;
-	
+
 	tmp = data[3];
 	data[3] = data[4];
 	data[4] = tmp;
@@ -194,50 +194,50 @@ void bigEndian_to_OSEndian_float(unsigned char data[4])
 		symTransform_4bytes(data);
 }
 
-void compressSingleFloatValue(FloatValueCompressElement *vce, float tgtValue, float precision, float medianValue, 
+void compressSingleFloatValue(FloatValueCompressElement *vce, float tgtValue, float precision, float medianValue,
 		int reqLength, int reqBytesLength, int resiBitsLength)
-{		
+{
 	float normValue = tgtValue - medianValue;
 
 	lfloat lfBuf;
 	lfBuf.value = normValue;
-			
+
 	int ignBytesLength = 32 - reqLength;
 	if(ignBytesLength<0)
 		ignBytesLength = 0;
-	
+
 	int tmp_int = lfBuf.ivalue;
 	intToBytes_bigEndian(vce->curBytes, tmp_int);
-		
+
 	lfBuf.ivalue = (lfBuf.ivalue >> ignBytesLength) << ignBytesLength;
-	
+
 	//float tmpValue = lfBuf.value;
-	
+
 	vce->data = lfBuf.value+medianValue;
 	vce->curValue = tmp_int;
 	vce->reqBytesLength = reqBytesLength;
 	vce->resiBitsLength = resiBitsLength;
 }
 
-void compressSingleDoubleValue(DoubleValueCompressElement *vce, double tgtValue, double precision, double medianValue, 
+void compressSingleDoubleValue(DoubleValueCompressElement *vce, double tgtValue, double precision, double medianValue,
 		int reqLength, int reqBytesLength, int resiBitsLength)
-{		
+{
 	double normValue = tgtValue - medianValue;
 
 	ldouble lfBuf;
 	lfBuf.value = normValue;
-			
+
 	int ignBytesLength = 64 - reqLength;
 	if(ignBytesLength<0)
 		ignBytesLength = 0;
 
 	long tmp_long = lfBuf.lvalue;
 	longToBytes_bigEndian(vce->curBytes, tmp_long);
-				
+
 	lfBuf.lvalue = (lfBuf.lvalue >> ignBytesLength)<<ignBytesLength;
-	
+
 	//double tmpValue = lfBuf.value;
-	
+
 	vce->data = lfBuf.value+medianValue;
 	vce->curValue = tmp_long;
 	vce->reqBytesLength = reqBytesLength;
@@ -269,7 +269,7 @@ int compIdenticalLeadingBytesCount_float(unsigned char* preBytes, unsigned char*
 }
 
 //TODO double-check the correctness...
-void addExactData(DynamicByteArray *exactMidByteArray, DynamicIntArray *exactLeadNumArray, 
+void addExactData(DynamicByteArray *exactMidByteArray, DynamicIntArray *exactLeadNumArray,
 		DynamicIntArray *resiBitArray, LossyCompressionElement *lce)
 {
 	int i;

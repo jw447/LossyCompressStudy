@@ -1,4 +1,4 @@
-SZ Compression Ratio Estimation (experiment)
+# SZ Compression Ratio Estimation (experiment)
 
 |           |Astro_cr(1%)|Astro_ci(1%)|Original|
 |-----------|------------|------------|--------|
