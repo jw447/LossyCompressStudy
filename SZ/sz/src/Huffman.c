@@ -634,8 +634,9 @@ void encode_withTree(int *s, int length, unsigned char **out, int *outSize)
 {
 	int i, nodeCount = 0;
 	unsigned char *treeBytes, buffer[4];
-	
+
 	init(s, length);
+  printf("length of statenum:%d\n",stateNum);
 	for (i = 0; i < stateNum; i++)
 		if (code[i]) nodeCount++;
 	nodeCount = nodeCount*2-1;

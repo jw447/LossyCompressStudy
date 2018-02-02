@@ -1374,7 +1374,7 @@ void new_TightDataPointStorageD(TightDataPointStorageD **this,
 
 	(*this)->rtypeArray = NULL;
 	(*this)->rtypeArray_size = 0;
-	
+
 	encode_withTree(type, dataSeriesLength, &(*this)->typeArray, &(*this)->typeArray_size);
 
 	(*this)->exactMidBytes = exactMidBytes;
