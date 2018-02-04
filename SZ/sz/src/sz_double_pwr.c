@@ -408,7 +408,8 @@ int dataLength, int *outSize, double min, double max)
 	unsigned char* pwrErrBoundBytes = (unsigned char*)malloc(pwrErrBoundBytes_size);
 
 	compute_segment_precisions_double_1D(oriData, dataLength, pwrErrBound, pwrErrBoundBytes);
-
+	printf("intvCapacity=%d\n",intvCapacity);
+	printf("intvRadius=%d\n",intvRadius);
 	unsigned int quantization_intervals;
 	if(optQuantMode==1)
 	{
@@ -501,12 +502,16 @@ int dataLength, int *outSize, double min, double max)
 			interval = 2*realPrecision;
 			updateReqLength = 0;
 		}
+		// printf("realPrecision=%f\n",realPrecision);
+		// printf("interval=%f\n",interval);
+
 		pred = 2*last3CmprsData[0] - last3CmprsData[1];
 		//pred = last3CmprsData[0];
 		predAbsErr = fabs(curData - pred);
 		if(predAbsErr<checkRadius)
 		{
 			state = (predAbsErr/realPrecision+1)/2;
+
 			hit = hit + 1;
 			if(curData>=pred)
 			{
@@ -519,6 +524,7 @@ int dataLength, int *outSize, double min, double max)
 				pred = pred - state*interval;
 			}
 			// printf("%d\n",type[i]);
+			printf("pred=%f\n",pred);
 			listAdd_double(last3CmprsData, pred);
 			continue;
 		}
@@ -562,19 +568,6 @@ int dataLength, int *outSize, double min, double max)
 			resiBitLengthArray->array, resiBitLengthArray->size,
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, pwrErrBoundBytes, pwrErrBoundBytes_size, radExpo);
 
-	// printf("1\n");
-	//sdi:Debug
-	/*	int sum =0;
-		for(i=0;i<dataLength;i++)
-			if(type[i]==0) sum++;
-		printf("opt_quantizations=%d, exactDataNum=%d, sum=%d\n",quantization_intervals, exactDataNum, sum);
-	*/
-	//	writeShortData(type, dataLength, "compressStateBytes.sb");
-	//	unsigned short type_[dataLength];
-	//	SZ_Reset();
-	//	decode_withTree(tdps->typeArray, tdps->typeArray_size, type_);
-	//	printf("tdps->typeArray_size=%d\n", tdps->typeArray_size);
-
 	//free memory
 	free_DBA(resiBitLengthArray);
 	free_DIA(exactLeadNumArray);
@@ -582,19 +575,6 @@ int dataLength, int *outSize, double min, double max)
 	free(type);
 
 	convertTDPStoFlatBytes_double(tdps, newByteData, outSize);
-
-	// save type* *********************************************/
-	/* open the file for writing*/
-	// FILE* fp = fopen ("type.txt","w+");
-  //
-	// /* write 10 lines of text into the file stream*/
-	// for(i = 1; i <= dataLength;i++){
-	// 	fprintf (fp, "%d\n",type[i]);
-	// }
-  //
-	// /* close the file*/
-	// fclose (fp);
-	/**********************************************************/
 
 	int doubleSize=sizeof(double);
 	if(*outSize>dataLength*doubleSize)

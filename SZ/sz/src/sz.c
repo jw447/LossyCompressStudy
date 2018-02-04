@@ -70,7 +70,7 @@ int SZ_Init(char *configFilePath)
 	int loadFileResult = SZ_LoadConf();
 	if(loadFileResult==SZ_NSCS)
 		return SZ_NSCS;
-	
+
 	return SZ_SCES;
 }
 
@@ -84,7 +84,7 @@ void SZ_Reset()
 		code = (unsigned long**)malloc(stateNum*sizeof(unsigned long*));
 		cout = (unsigned char *)malloc(stateNum*sizeof(unsigned char));
 	}
-	
+
 	memset(pool, 0, allNodes*2*sizeof(struct node_t));
 	memset(qqq, 0, allNodes*2*sizeof(node));
     memset(code, 0, stateNum*sizeof(unsigned long*));
@@ -104,7 +104,7 @@ int SZ_Init_Params(sz_params *params)
     if(*y==1) endianType = LITTLE_ENDIAN_SYSTEM;
 
     // set default values
-    if(params->max_quant_intervals) 
+    if(params->max_quant_intervals)
     {
 		maxRangeRadius = params->max_quant_intervals/2;
     	stateNum = maxRangeRadius*2;
@@ -170,9 +170,9 @@ int SZ_Init_Params(sz_params *params)
 			predThreshold = params->predThreshold;
     }
 
-//	versionNumber[0] = SZ_VER_MAJOR; //0
-//	versionNumber[1] = SZ_VER_MINOR; //5
-//	versionNumber[2] = SZ_VER_REVISION; //15
+	//	versionNumber[0] = SZ_VER_MAJOR; //0
+	//	versionNumber[1] = SZ_VER_MINOR; //5
+	//	versionNumber[2] = SZ_VER_REVISION; //15
 
 	if(params->quantization_intervals%2!=0)
 	{
@@ -182,64 +182,64 @@ int SZ_Init_Params(sz_params *params)
 
     //initialization for Huffman encoding
 	SZ_Reset();
-	
+
     return SZ_SCES;
 }
 
 int computeDimension(int r5, int r4, int r3, int r2, int r1)
 {
 	int dimension;
-	if(r1==0) 
+	if(r1==0)
 	{
 		dimension = 0;
 	}
-	else if(r2==0) 
+	else if(r2==0)
 	{
 		dimension = 1;
 	}
-	else if(r3==0) 
+	else if(r3==0)
 	{
 		dimension = 2;
 	}
-	else if(r4==0) 
+	else if(r4==0)
 	{
 		dimension = 3;
 	}
-	else if(r5==0) 
+	else if(r5==0)
 	{
 		dimension = 4;
 	}
-	else 
+	else
 	{
 		dimension = 5;
 	}
-	return dimension;	
+	return dimension;
 }
 
 int computeDataLength(int r5, int r4, int r3, int r2, int r1)
 {
 	int dataLength;
-	if(r1==0) 
+	if(r1==0)
 	{
 		dataLength = 0;
 	}
-	else if(r2==0) 
+	else if(r2==0)
 	{
 		dataLength = r1;
 	}
-	else if(r3==0) 
+	else if(r3==0)
 	{
 		dataLength = r1*r2;
 	}
-	else if(r4==0) 
+	else if(r4==0)
 	{
 		dataLength = r1*r2*r3;
 	}
-	else if(r5==0) 
+	else if(r5==0)
 	{
 		dataLength = r1*r2*r3*r4;
 	}
-	else 
+	else
 	{
 		dataLength = r1*r2*r3*r4*r5;
 	}
@@ -248,7 +248,7 @@ int computeDataLength(int r5, int r4, int r3, int r2, int r1)
 
 /*-------------------------------------------------------------------------*/
 /**
-    @brief      Perform Compression 
+    @brief      Perform Compression
     @param      data           data to be compressed
     @param      outSize        the size (in bytes) after compression
     @param		r5,r4,r3,r2,r1	the sizes of each dimension (supporting only 5 dimensions at most in this version.
@@ -256,25 +256,25 @@ int computeDataLength(int r5, int r4, int r3, int r2, int r1)
 
  **/
 /*-------------------------------------------------------------------------*/
-unsigned char* SZ_compress_args(int dataType, void *data, int *outSize, int errBoundMode, double absErrBound, 
+unsigned char* SZ_compress_args(int dataType, void *data, int *outSize, int errBoundMode, double absErrBound,
 double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
 {
 	//TODO
 	if(dataType==SZ_FLOAT)
 	{
 		unsigned char *newByteData;
-		
-		SZ_compress_args_float(&newByteData, (float *)data, r5, r4, r3, r2, r1, 
+
+		SZ_compress_args_float(&newByteData, (float *)data, r5, r4, r3, r2, r1,
 		outSize, errBoundMode, absErrBound, relBoundRatio);
-		
+
 		return newByteData;
 	}
 	else if(dataType==SZ_DOUBLE)
 	{
 		unsigned char *newByteData;
-		SZ_compress_args_double(&newByteData, (double *)data, r5, r4, r3, r2, r1, 
+		SZ_compress_args_double(&newByteData, (double *)data, r5, r4, r3, r2, r1,
 		outSize, errBoundMode, absErrBound, relBoundRatio);
-		
+
 		return newByteData;
 	}
 	else
@@ -288,46 +288,46 @@ int SZ_compress_args2(int dataType, void *data, unsigned char* compressed_bytes,
 {
 	unsigned char* bytes = SZ_compress_args(dataType, data, outSize, errBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
     memcpy(compressed_bytes, bytes, *outSize);
-    free(bytes); 
+    free(bytes);
 	return SZ_SCES;
 }
 
-int SZ_compress_args3(int dataType, void *data, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio, 
-int r5, int r4, int r3, int r2, int r1, 
+int SZ_compress_args3(int dataType, void *data, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio,
+int r5, int r4, int r3, int r2, int r1,
 int R5, int R4, int R3, int R2, int R1)
 {
 	if(dataType==SZ_FLOAT)
 	{
-		SZ_compress_args_float_subblock(compressed_bytes, (float *)data, 
-		r5, r4, r3, r2, r1, 
-		R5, R4, R3, R2, R1, 
+		SZ_compress_args_float_subblock(compressed_bytes, (float *)data,
+		r5, r4, r3, r2, r1,
+		R5, R4, R3, R2, R1,
 		outSize, errBoundMode, absErrBound, relBoundRatio);
-		
+
 		return SZ_SCES;
 	}
 	else if(dataType==SZ_DOUBLE)
 	{
 		unsigned char *newByteData;
-		SZ_compress_args_double_subblock(compressed_bytes, (double *)data, 
-		r5, r4, r3, r2, r1, 
-		R5, R4, R3, R2, R1, 
+		SZ_compress_args_double_subblock(compressed_bytes, (double *)data,
+		r5, r4, r3, r2, r1,
+		R5, R4, R3, R2, R1,
 		outSize, errBoundMode, absErrBound, relBoundRatio);
-		
+
 		return SZ_SCES;
 	}
 	else
 	{
 		printf("Error (in SZ_compress_args3): dataType can only be SZ_FLOAT or SZ_DOUBLE.\n");
 		return SZ_NSCS;
-	}	
+	}
 }
 
 unsigned char *SZ_compress(int dataType, void *data, int *outSize, int r5, int r4, int r3, int r2, int r1)
-{	
+{
 	int pointCount;
 	pointCount = computeDataLength(r5,r4,r3,r2,r1);
 	printf("point count: %d\n",pointCount);
-	
+
 	unsigned char *newByteData = SZ_compress_args(dataType, data, outSize, errorBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
 	return newByteData;
 }
@@ -335,7 +335,7 @@ unsigned char *SZ_compress(int dataType, void *data, int *outSize, int r5, int r
 //////////////////
 /*-------------------------------------------------------------------------*/
 /**
-    @brief      Perform Compression 
+    @brief      Perform Compression
     @param      data           data to be compressed
     @param		reservedValue  the reserved value
     @param      outSize        the size (in bytes) after compression
@@ -352,8 +352,8 @@ unsigned char *SZ_compress_rev_args(int dataType, void *data, void *reservedValu
 	//TODO
 	printf("SZ compression with reserved data is TO BE DONE LATER.\n");
 	exit(0);
-	
-	return newByteData;	
+
+	return newByteData;
 }
 
 int SZ_compress_rev_args2(int dataType, void *data, void *reservedValue, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
@@ -369,11 +369,11 @@ unsigned char *SZ_compress_rev(int dataType, void *data, void *reservedValue, in
 	int dataLength;
 
 	unsigned char *newByteData;
-	dataLength = computeDataLength(r5,r4,r3,r2,r1);	
+	dataLength = computeDataLength(r5,r4,r3,r2,r1);
 	//TODO
 	printf("SZ compression with reserved data is TO BE DONE LATER.\n");
 	exit(0);
-	
+
 	return newByteData;
 }
 
@@ -385,7 +385,7 @@ void *SZ_decompress(int dataType, unsigned char *bytes, int byteLength, int r5, 
 		sysEndianType = LITTLE_ENDIAN_SYSTEM;
 	else //=0
 		sysEndianType = BIG_ENDIAN_SYSTEM;
-	
+
 	if(dataType == SZ_FLOAT)
 	{
 		float *newFloatData;
@@ -401,13 +401,13 @@ void *SZ_decompress(int dataType, unsigned char *bytes, int byteLength, int r5, 
 	else
 	{
 		printf("Error: data type cannot be the types other than SZ_FLOAT or SZ_DOUBLE\n");
-		return NULL;		
+		return NULL;
 	}
 }
 
 /**
- * 
- * 
+ *
+ *
  * return number of elements or -1 if any errors
  * */
 int SZ_decompress_args(int dataType, unsigned char *bytes, int byteLength, void* decompressed_array, int r5, int r4, int r3, int r2, int r1)
@@ -420,7 +420,7 @@ int SZ_decompress_args(int dataType, unsigned char *bytes, int byteLength, void*
 		float* data_array = (float *)decompressed_array;
 		memcpy(data_array, data, nbEle*sizeof(float));
 		//for(i=0;i<nbEle;i++)
-		//	data_array[i] = data[i];	
+		//	data_array[i] = data[i];
 		free(data); //this free operation seems to not work with BlueG/Q system.
 	}
 	else if(dataType == SZ_DOUBLE)
@@ -435,7 +435,7 @@ int SZ_decompress_args(int dataType, unsigned char *bytes, int byteLength, void*
 	else
 	{
 		printf("Error: data type cannot be the types other than SZ_FLOAT or SZ_DOUBLE\n");
-		return SZ_NSCS; //indicating error				
+		return SZ_NSCS; //indicating error
 	}
 
 	return nbEle;
@@ -471,7 +471,7 @@ void filloutDimArray(int* dim, int r5, int r4, int r3, int r2, int r1)
 		dim[1] = r4;
 		dim[2] = r3;
 		dim[3] = r2;
-		dim[4] = r1;		
+		dim[4] = r1;
 	}
 }
 
@@ -509,11 +509,11 @@ int isZlibFormat(unsigned char magic1, unsigned char magic2)
 }
 
 unsigned char* SZ_batch_compress(int *outSize)
-{	
+{
 	int dataLength;
-	DynamicByteArray* dba; 
+	DynamicByteArray* dba;
 	new_DBA(&dba, 32768);
-	
+
 	//number of variables
 	int varCount = sz_varset->count;
 	unsigned char countBufBytes[4];
@@ -521,7 +521,7 @@ unsigned char* SZ_batch_compress(int *outSize)
 	//add only the lats two bytes, i.e., the maximum # variables is supposed to be less than 32768
 	addDBA_Data(dba, countBufBytes[2]);
 	addDBA_Data(dba, countBufBytes[3]);
-	
+
 	int i, j, k = 0;
 	SZ_Variable* p = sz_varset->header->next;
 	while(p!=NULL)
@@ -530,101 +530,101 @@ unsigned char* SZ_batch_compress(int *outSize)
 		{
 			unsigned char *newByteData;
 			int outSize;
-			SZ_compress_args_float_wRngeNoGzip(&newByteData, (float *)p->data, 
-			p->r5, p->r4, p->r3, p->r2, p->r1, 
+			SZ_compress_args_float_wRngeNoGzip(&newByteData, (float *)p->data,
+			p->r5, p->r4, p->r3, p->r2, p->r1,
 			&(p->compressedSize), p->errBoundMode, p->absErrBound, p->relBoundRatio);
-			
+
 			p->compressedBytes = newByteData;
 		}
 		else if(p->dataType==SZ_DOUBLE)
 		{
 			unsigned char *newByteData;
 			int outSize;
-			SZ_compress_args_double_wRngeNoGzip(&newByteData, (double *)p->data, 
-			p->r5, p->r4, p->r3, p->r2, p->r1, 
+			SZ_compress_args_double_wRngeNoGzip(&newByteData, (double *)p->data,
+			p->r5, p->r4, p->r3, p->r2, p->r1,
 			&(p->compressedSize), p->errBoundMode, p->absErrBound, p->relBoundRatio);
-			
+
 			p->compressedBytes = newByteData;
 		}
-		
+
 		SZ_ReleaseHuffman();
-		
+
 		//TODO: copy metadata information (totally 1+4*x+4+(1+y) bytes)
-		//byte format of variable storage: meta 1 bytes (000000xy) x=0 SZ/1 HZ, y=0 float/1 double ; 
-		//4*x: x integers indicating the dimension sizes; 
+		//byte format of variable storage: meta 1 bytes (000000xy) x=0 SZ/1 HZ, y=0 float/1 double ;
+		//4*x: x integers indicating the dimension sizes;
 		//compressed length (int) 4 bytes;
-		//1+y: 1 means the length of varname, y bytes represents the varName string. 
+		//1+y: 1 means the length of varname, y bytes represents the varName string.
 		int meta = 0;
 		if(p->dataType == SZ_FLOAT)
 			meta = 2; //10
 		else if(p->dataType == SZ_DOUBLE)
 			meta = 3; //11
-		
+
 		//keep dimension information
 		int dimNum = computeDimension(p->r5, p->r4, p->r3, p->r2, p->r1);
 		int dimSize[dimNum];
 		memset(dimSize, 0, dimNum*sizeof(int));
 		meta = meta | dimNum << 2; //---aaabc: aaa indicates dim, b indicates HZ, c indicates dataType
-		
+
 		addDBA_Data(dba, (unsigned char)meta);
-		
+
 		filloutDimArray(dimSize, p->r5, p->r4, p->r3, p->r2, p->r1);
-		
+
 		for(j=0;j<dimNum;j++)
 		{
 			intToBytes_bigEndian(countBufBytes, dimSize[j]);
 			for(i = 0;i<4;i++)
 				addDBA_Data(dba, countBufBytes[i]);
 		}
-			 
-		//Keep compressed size information	 
+
+		//Keep compressed size information
 		intToBytes_bigEndian(countBufBytes, p->compressedSize);
-		
+
 		for(i = 0;i<4;i++)
-			addDBA_Data(dba, countBufBytes[i]);			 
-			 
-		//Keep varName information	 
+			addDBA_Data(dba, countBufBytes[i]);
+
+		//Keep varName information
 		unsigned char varNameLength = (unsigned char)strlen(p->varName);
 		addDBA_Data(dba, varNameLength);
 		memcpyDBA_Data(dba, (unsigned char*)p->varName, varNameLength);
-			 
+
 		//copy the compressed stream
 		memcpyDBA_Data(dba, p->compressedBytes, p->compressedSize);
 		free(p->compressedBytes);
 		p->compressedBytes = NULL;
-			 
+
 		p = p->next;
 	}
-	
+
 	unsigned char* tmpFinalCompressedBytes;
 	convertDBAtoBytes(dba, &tmpFinalCompressedBytes);
-	
+
 	unsigned char* tmpCompressedBytes2;
 	int tmpGzipSize = 0;
-	
+
 	if(szMode!=SZ_BEST_SPEED)
 	{
 		tmpGzipSize = (int)zlib_compress2(tmpFinalCompressedBytes, dba->size, &tmpCompressedBytes2, gzipMode);
-		free(tmpFinalCompressedBytes);		
+		free(tmpFinalCompressedBytes);
 	}
 	else
 	{
 		tmpCompressedBytes2 = tmpFinalCompressedBytes;
 		tmpGzipSize = dba->size;
-	}	
-	
+	}
+
 	unsigned char* finalCompressedBytes = (unsigned char*) malloc(sizeof(unsigned char)*(4+tmpGzipSize));
-	
+
 	intToBytes_bigEndian(countBufBytes, dba->size);
-	
+
 	memcpy(finalCompressedBytes, countBufBytes, 4);
-	
+
 	memcpy(&(finalCompressedBytes[4]), tmpCompressedBytes2, tmpGzipSize);
 	free(tmpCompressedBytes2);
-	
+
 	*outSize = 4+tmpGzipSize;
 	free_DBA(dba);
-	
+
 	return finalCompressedBytes;
 }
 
@@ -632,22 +632,22 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 {
 	int i, j, k = 0;
 	unsigned char intByteBuf[4];
-	
+
 	int x = 1;
 	char *y = (char*)&x;
 	if(*y==1)
 		sysEndianType = LITTLE_ENDIAN_SYSTEM;
 	else //=0
 		sysEndianType = BIG_ENDIAN_SYSTEM;
-	
+
 	//get target decompression size for Gzip (zlib)
 	intByteBuf[0] = compressedStream[0];
 	intByteBuf[1] = compressedStream[1];
 	intByteBuf[2] = compressedStream[2];
 	intByteBuf[3] = compressedStream[3];
-	
+
 	int targetUncompressSize = bytesToInt_bigEndian(intByteBuf);
-	
+
 	//Gzip decompression
 	unsigned char* gzipDecpressBytes;
 	int gzipDecpressSize = 0;
@@ -660,28 +660,28 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 		gzipDecpressSize = compressedLength;
 		gzipDecpressBytes = &(compressedStream[4]);
 	}
-	
+
 	if(gzipDecpressSize!=targetUncompressSize)
 	{
 		printf("Error: incorrect decompression in zlib_uncompress3: gzipDecpressSize!=targetUncompressSize\n");
 		*status = SZ_NSCS;
 		return NULL;
 	}
-	
-	//Start analyzing the byte stream for further decompression	
+
+	//Start analyzing the byte stream for further decompression
 	intByteBuf[0] = 0;
-	intByteBuf[1] = 0; 
+	intByteBuf[1] = 0;
 	intByteBuf[2] = gzipDecpressBytes[k++];
 	intByteBuf[3] = gzipDecpressBytes[k++];
-	
-	int varCount = bytesToInt_bigEndian(intByteBuf);	
-		
+
+	int varCount = bytesToInt_bigEndian(intByteBuf);
+
 	int varNum = sz_varset->count;
 	int dataLength, cpressedLength;
-	
+
 	if(varNum==0)
 	{
-		SZ_Variable* lastVar = sz_varset->header; 
+		SZ_Variable* lastVar = sz_varset->header;
 		if(lastVar->next!=NULL)
 		{
 			printf("Error: sz_varset.count is inconsistent with the number of variables in sz_varset->header.\n");
@@ -703,32 +703,32 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 				*status = SZ_NSCS;
 				return NULL;
 			}
-			
+
 			//get # dimensions and the size of each dimension
 			int dimNum = (type & 0x1C) >> 2; //compute dimension
 			int start_dim = 5 - dimNum;
 			int dimSize[5];
 			memset(dimSize, 0, 5*sizeof(int));
-			
+
 			for(j=0;j<dimNum;j++)
 			{
 				memcpy(intByteBuf, &(gzipDecpressBytes[k]), 4);
 				k+=4;
 				dimSize[start_dim+j] = bytesToInt_bigEndian(intByteBuf);
-			}	
-			
+			}
+
 			//get compressed length
 			memcpy(intByteBuf, &(gzipDecpressBytes[k]), 4);
 			k+=4;
-			cpressedLength = bytesToInt_bigEndian(intByteBuf);	
-					
-			//Keep varName information	 
+			cpressedLength = bytesToInt_bigEndian(intByteBuf);
+
+			//Keep varName information
 			int varNameLength = gzipDecpressBytes[k++];
-			char* varNameString = (char*)malloc(sizeof(char)*(varNameLength+1));	
+			char* varNameString = (char*)malloc(sizeof(char)*(varNameLength+1));
 			memcpy(varNameString, &(gzipDecpressBytes[k]), varNameLength);
 			k+=varNameLength;
 			varNameString[varNameLength] = '\0';
-		
+
 			//TODO: convert szTmpBytes to data array.
 			dataLength = computeDataLength(dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);
 			int dim = computeDimension(dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);
@@ -755,10 +755,10 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 					*status = SZ_DERR;
 					return NULL;
 				}
-				
+
 				SZ_batchAddVar(varNameString, dataType, newData, 0, 0, 0, dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);
-				free_TightDataPointStorageF(tdps);			
-			}	
+				free_TightDataPointStorageF(tdps);
+			}
 			else if(dataType==SZ_DOUBLE)
 			{
 				double* newData;
@@ -782,9 +782,9 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 					*status = SZ_DERR;
 					return NULL;
 				}
-			
+
 				SZ_batchAddVar(varNameString, dataType, newData, 0, 0, 0, dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);
-				free_TightDataPointStorageD(tdps);					
+				free_TightDataPointStorageD(tdps);
 			}
 			else
 			{
@@ -792,7 +792,7 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 				*status = SZ_TERR;
 				return NULL;
 			}
-	
+
 			k+=cpressedLength;
 		}
 	}
@@ -806,7 +806,7 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 	}
 	else //if(varNum>0 && varNum==varCount)
 	{
-		SZ_Variable* p = sz_varset->header; 
+		SZ_Variable* p = sz_varset->header;
 		for(i=0;i<varCount;i++)
 		{
 			int type = (int)gzipDecpressBytes[k++];
@@ -822,34 +822,34 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 				*status = SZ_DERR;
 				return NULL;
 			}
-			
+
 			//get # dimensions and the size of each dimension
 			int dimNum = (type & 0x1C) >> 2; //compute dimension
 			int start_dim = 5 - dimNum;
 			int dimSize[5];
 			memset(dimSize, 0, 5*sizeof(int));
-			
+
 			for(j=0;j<dimNum;j++)
 			{
 				memcpy(intByteBuf, &(gzipDecpressBytes[k]), 4);
 				k+=4;
 				dimSize[start_dim+j] = bytesToInt_bigEndian(intByteBuf);
 			}
-			
+
 			//get compressed length
 			memcpy(intByteBuf, &(gzipDecpressBytes[k]), 4);
 			k+=4;
-			cpressedLength = bytesToInt_bigEndian(intByteBuf);	
-			
-			//Keep varName information	 
+			cpressedLength = bytesToInt_bigEndian(intByteBuf);
+
+			//Keep varName information
 			int varNameLength = gzipDecpressBytes[k++];
-			char* varNameString = (char*)malloc(sizeof(char)*(varNameLength+1));	
+			char* varNameString = (char*)malloc(sizeof(char)*(varNameLength+1));
 			memcpy(varNameString, &(gzipDecpressBytes[k]), varNameLength);
 			k+=varNameLength;
 			varNameString[varNameLength] = '\0';
-			
+
 			SZ_Variable* curVar = p->next;
-			
+
 			int checkVarName = strcmp(varNameString, curVar->varName);
 			if(checkVarName!=0)
 			{
@@ -857,15 +857,15 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 				*status = SZ_DERR;
 				return NULL;
 			}
-						
+
 			//TODO: convert szTmpBytes to data array.
 			dataLength = computeDataLength(dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);
-			int dim = computeDimension(dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);			
+			int dim = computeDimension(dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4]);
 			if(dataType==SZ_FLOAT)
 			{
 				float* newData;
 				TightDataPointStorageF* tdps;
-				int errBoundMode = new_TightDataPointStorageF_fromFlatBytes(&tdps, &(gzipDecpressBytes[k]), cpressedLength);					
+				int errBoundMode = new_TightDataPointStorageF_fromFlatBytes(&tdps, &(gzipDecpressBytes[k]), cpressedLength);
 
 				if (dim == 1)
 					getSnapshotData_float_1D(&newData,dimSize[4],tdps, errBoundMode);
@@ -880,14 +880,14 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 					getSnapshotData_float_3D(&newData,dimSize[1]*dimSize[2], dimSize[3], dimSize[4],tdps, errBoundMode);
 				else
 				{
-					printf("Error: doesn't support 5 dimensions yet.\n");			
+					printf("Error: doesn't support 5 dimensions yet.\n");
 					*status = SZ_DERR;
 					return NULL;
 				}
-				
-				free_TightDataPointStorageF(tdps);	
+
+				free_TightDataPointStorageF(tdps);
 				curVar->data = newData;
-			}	
+			}
 			else if(dataType==SZ_DOUBLE)
 			{
 				double* newData;
@@ -912,15 +912,15 @@ SZ_VarSet* SZ_batch_decompress(unsigned char* compressedStream, int compressedLe
 					return NULL;
 				}
 				SZ_batchAddVar(varNameString, dataType, newData, dimSize[0], dimSize[1], dimSize[2], dimSize[3], dimSize[4], 0, 0, 0);
-				free_TightDataPointStorageD(tdps);	
+				free_TightDataPointStorageD(tdps);
 			}
 			else
 			{
 				printf("Error: wrong dataType in the batch decompression.\n");
 				*status = SZ_TERR;
 				return NULL;
-			}		
-			
+			}
+
 			free(varNameString);
 			k+=cpressedLength;
 			p = p->next;
@@ -961,35 +961,35 @@ int getPredictionCoefficients(int layers, int dimension, int **coeff_array, int 
 					(*coeff_array)[1] = -3;
 					(*coeff_array)[2] = 1;
 					break;
-			}	
+			}
 			break;
 		case 2:
 			switch(layers)
 			{
 				case 1:
-				
+
 					break;
 				case 2:
-				
+
 					break;
 				case 3:
-				
+
 					break;
-			}				
+			}
 			break;
 		case 3:
 			switch(layers)
 			{
 				case 1:
-				
+
 					break;
 				case 2:
-				
+
 					break;
 				case 3:
-				
+
 					break;
-			}			
+			}
 			break;
 		default:
 			printf("Error: dimension must be no greater than 3 in the current version.\n");
