@@ -4,10 +4,11 @@ point count: 640
 datalength=640
 hit: 633
 miss: 5
+length of statenum:65536
 nodecount=489
 treeByteSize=4402
 enCodeSize=437
-timecost, 0.003988, seconds
+timecost, 0.004268, seconds
 done
 5120
 2436

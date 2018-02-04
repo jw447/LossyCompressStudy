@@ -401,8 +401,10 @@ int dataLength, int *outSize, double min, double max)
 	SZ_Reset();
 	printf("datalength=%d\n",dataLength);
 	int pwrLength = dataLength%segment_size==0?dataLength/segment_size:dataLength/segment_size+1;
+	printf("pwrLength=%d\n",pwrLength);
 	double* pwrErrBound = (double*)malloc(sizeof(double)*pwrLength);
 	int pwrErrBoundBytes_size = sizeof(unsigned char)*pwrLength*2;
+	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
 	unsigned char* pwrErrBoundBytes = (unsigned char*)malloc(pwrErrBoundBytes_size);
 
 	compute_segment_precisions_double_1D(oriData, dataLength, pwrErrBound, pwrErrBoundBytes);
@@ -486,6 +488,8 @@ int dataLength, int *outSize, double min, double max)
 
 	int hit = 0;
 	int miss = 0;
+
+	printf("datalength=%d\n",dataLength);
 
 	for(i=2;i<dataLength;i++)
 	{
