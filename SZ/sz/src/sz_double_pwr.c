@@ -507,6 +507,7 @@ int dataLength, int *outSize, double min, double max)
 
 		pred = 2*last3CmprsData[0] - last3CmprsData[1];
 		//pred = last3CmprsData[0];
+		printf("----------factors\n");
 		predAbsErr = fabs(curData - pred);
 		if(predAbsErr<checkRadius)
 		{
@@ -523,8 +524,8 @@ int dataLength, int *outSize, double min, double max)
 				type[i] = intvRadius-state;
 				pred = pred - state*interval;
 			}
-			// printf("%d\n",type[i]);
-			printf("pred=%f\n",pred);
+			printf("%d\n",type[i]);
+			// printf("pred=%f\n",pred);
 			listAdd_double(last3CmprsData, pred);
 			continue;
 		}
@@ -538,7 +539,7 @@ int dataLength, int *outSize, double min, double max)
 			updateReqLength = 1;
 			// printf("reqBytesLength=%d\n",reqBytesLength);
 		}
-
+		printf("----------\n");
 		miss = miss + 1;
 		type[i] = 0;
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
