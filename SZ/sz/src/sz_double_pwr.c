@@ -491,7 +491,7 @@ int dataLength, int *outSize, double min, double max)
 	int miss = 0;
 
 	printf("datalength=%d\n",dataLength);
-
+	printf("----------factors\n");
 	for(i=2;i<dataLength;i++)
 	{
 		curData = spaceFillingValue[i];
@@ -507,7 +507,7 @@ int dataLength, int *outSize, double min, double max)
 
 		pred = 2*last3CmprsData[0] - last3CmprsData[1];
 		//pred = last3CmprsData[0];
-		printf("----------factors\n");
+
 		predAbsErr = fabs(curData - pred);
 		if(predAbsErr<checkRadius)
 		{
@@ -539,7 +539,7 @@ int dataLength, int *outSize, double min, double max)
 			updateReqLength = 1;
 			// printf("reqBytesLength=%d\n",reqBytesLength);
 		}
-		printf("----------\n");
+
 		miss = miss + 1;
 		type[i] = 0;
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
@@ -551,7 +551,7 @@ int dataLength, int *outSize, double min, double max)
 
 		listAdd_double(last3CmprsData, vce->data);
 	}//end of for
-
+	printf("----------\n");
 	printf("hit: %d\n",hit);
 	printf("miss: %d\n",miss);
 

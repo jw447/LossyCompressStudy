@@ -4,31 +4,26 @@ MODEL COMPARISON
 INTRODUCTION
 -----------------
 
-This folder contains the work to predict SZ compression rate on different data. Data comes from three original dataset: Fish, Eddy and YF17. Each dataset is sampled using _block interval sampling_, _block random sampling_, _chunk interval sampling_, _chunk random sampling_, _point interval sampling_, _point random sampling_, _prefix sampling_. We calculate and print out the quantizaton factor for all data under all settings. Hope we can find something useful here.
+This work focuses on the compression ratio estimation of SZ compressor. We first try to reproduce the figure 10 and TABLE III in IPDPS paper. Then we reproduce the SZ compression ratio estimation based on sample data compression metrics and quantization factors distribution.
+ 
+We validate the compression ratio method using various datasets: fish, eddy, yf17....
 
 SETTINGS
 --------
 
-__Quantization_intervals__
+__Quantization intervals__ (See paper for other datasets)
 
 Fish: 10000
-Eddy: 65535
-YF17: 8192
 
+Eddy: 65535
+
+YF17: 8192
 
 __errorBoundMode__
 
 PW_REL
 
+__Sampling method__ 
 
-INPUTDATA
----------
-
-small: contains eddy, fish and yf17
-
-full: 
-
-original: uncompressed data
-
-
-
+ _chunk interval sampling_ and _chunk random sampling_ that can preserve the bounded locality which enables better compression estimation of full data.
+ 

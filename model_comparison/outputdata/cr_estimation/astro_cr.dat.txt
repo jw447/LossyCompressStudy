@@ -1,13 +1,3 @@
-cfgFile=sz.config
-[SZ] Reading SZ configuration file (sz.config) ...
-point count: 640
-datalength=640
-pwrLength=20
-pwrErrBoundBytes_size=40
-intvCapacity=20000
-intvRadius=10000
-datalength=640
-----------factors
 10000
 10000
 10000
@@ -620,15 +610,3 @@ datalength=640
 10001
 9999
 10001
-----------
-hit: 612
-miss: 26
-length of statenum:65536
-nodecount=383
-treeByteSize=3448
-enCodeSize=385
-timecost, 0.009012, seconds
-done
-5120
-2046
-sz compression ratio, 2.50 
