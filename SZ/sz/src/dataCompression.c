@@ -222,7 +222,7 @@ void compressSingleFloatValue(FloatValueCompressElement *vce, float tgtValue, fl
 void compressSingleDoubleValue(DoubleValueCompressElement *vce, double tgtValue, double precision, double medianValue,
 		int reqLength, int reqBytesLength, int resiBitsLength)
 {
-	double normValue = tgtValue - medianValue;
+	double normValue = tgtValue - medianValue; //normalization
 
 	ldouble lfBuf;
 	lfBuf.value = normValue;

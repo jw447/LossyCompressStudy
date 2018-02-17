@@ -7,7 +7,7 @@
  *      See COPYRIGHT in top-level directory.
  */
 
-#include <stdlib.h> 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "TightDataPointStorageD.h"
@@ -15,7 +15,7 @@
 #include "Huffman.h"
 //#include "rw.h"
 
-void decompressDataSeries_double_1D_pwr(double** data, int dataSeriesLength, TightDataPointStorageD* tdps) 
+void decompressDataSeries_double_1D_pwr(double** data, int dataSeriesLength, TightDataPointStorageD* tdps)
 {
 	updateQuantizationInfo(tdps->intervals);
 	unsigned char tmpPrecBytes[8] = {0}; //used when needing to convert bytes to float values
@@ -27,7 +27,7 @@ void decompressDataSeries_double_1D_pwr(double** data, int dataSeriesLength, Tig
 
 	unsigned char* leadNum;
 	double interval;// = (float)tdps->realPrecision*2;
-	
+
 	convertByteArray2IntArray_fast_2b(tdps->exactDataNum, tdps->leadNumArray, tdps->leadNumArray_size, &leadNum);
 	*data = (double*)malloc(sizeof(double)*dataSeriesLength);
 
@@ -37,21 +37,21 @@ void decompressDataSeries_double_1D_pwr(double** data, int dataSeriesLength, Tig
 	//memcpy(type, tdps->typeArray, dataSeriesLength*sizeof(unsigned short));
 	//type = tdps->typeArray;
 	decode_withTree(tdps->typeArray, dataSeriesLength, type);
-	
+
 	unsigned char preBytes[8];
 	unsigned char curBytes[8];
-	
+
 	memset(preBytes, 0, 8);
 
 	int curByteIndex = 0;
-	int reqLength, reqBytesLength, resiBitsLength, resiBits, reqExpo, reqMantLength; 
-	unsigned char leadingNum;	
+	int reqLength, reqBytesLength, resiBitsLength, resiBits, reqExpo, reqMantLength;
+	unsigned char leadingNum;
 	double medianValue, exactData, predValue, realPrecision;
-	
+
 	medianValue = tdps->medianValue;
-	
+
 	int type_, updateReqLength = 0;
-	for (i = 0; i < dataSeriesLength; i++) 
+	for (i = 0; i < dataSeriesLength; i++)
 	{
 		if(i%tdps->segment_size==0)
 		{
@@ -71,8 +71,8 @@ void decompressDataSeries_double_1D_pwr(double** data, int dataSeriesLength, Tig
 			{
 				computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 				reqBytesLength = reqLength/8;
-				resiBitsLength = reqLength%8;	
-				updateReqLength = 1;	
+				resiBitsLength = reqLength%8;
+				updateReqLength = 1;
 			}
 			resiBits = 0;
 			if (resiBitsLength != 0) {
@@ -109,7 +109,7 @@ void decompressDataSeries_double_1D_pwr(double** data, int dataSeriesLength, Tig
 				unsigned char resiByte = (unsigned char) (resiBits << (8 - resiBitsLength));
 				curBytes[reqBytesLength] = resiByte;
 			}
-			
+
 			exactData = bytesToDouble(curBytes);
 			(*data)[i] = exactData + medianValue;
 			memcpy(preBytes,curBytes,8);
@@ -146,11 +146,11 @@ double* extractRealPrecision_2D_double(int R1, int R2, int blockSize, TightDataP
 	return result;
 }
 
-void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightDataPointStorageD* tdps) 
+void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightDataPointStorageD* tdps)
 {
 	updateQuantizationInfo(tdps->intervals);
 	//printf("tdps->intervals=%d, intvRadius=%d\n", tdps->intervals, intvRadius);
-	
+
 	int i, j, k = 0, p = 0, l = 0; // k is to track the location of residual_bit
 	// in resiMidBits, p is to track the
 	// byte_index of resiMidBits, l is for
@@ -177,8 +177,8 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 	memset(preBytes, 0, 8);
 
 	int curByteIndex = 0;
-	int reqLength, reqBytesLength, resiBitsLength, resiBits, reqExpo, reqMantLength; 
-	unsigned char leadingNum;	
+	int reqLength, reqBytesLength, resiBitsLength, resiBits, reqExpo, reqMantLength;
+	unsigned char leadingNum;
 	double medianValue, exactData, predValue, realPrecision;
 	int type_;
 	double pred1D, pred2D;
@@ -186,10 +186,10 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 
 	int blockSize = computeBlockEdgeSize_2D(tdps->segment_size);
 	int R1 = 1+(r1-1)/blockSize;
-	int R2 = 1+(r2-1)/blockSize;		
+	int R2 = 1+(r2-1)/blockSize;
 	double* pwrErrBound = extractRealPrecision_2D_double(R1, R2, blockSize, tdps);
 
-	realPrecision = pwrErrBound[0];	
+	realPrecision = pwrErrBound[0];
 	computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 	reqBytesLength = reqLength/8;
 	resiBitsLength = reqLength%8;
@@ -238,10 +238,10 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 	memcpy(preBytes,curBytes,8);
 
 	/* Process Row-0, data 1 */
-	type_ = type[1]; 
+	type_ = type[1];
 	if (type_ != 0)
 	{
-		pred1D = (*data)[0];		
+		pred1D = (*data)[0];
 		(*data)[1] = pred1D + 2 * (type_ - intvRadius) * realPrecision;
 	}
 	else
@@ -282,7 +282,7 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 			unsigned char resiByte = (unsigned char) (resiBits << (8 - resiBitsLength));
 			curBytes[reqBytesLength] = resiByte;
 		}
-		
+
 		exactData = bytesToDouble(curBytes);
 		(*data)[1] = exactData + medianValue;
 		memcpy(preBytes,curBytes,8);
@@ -296,12 +296,12 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 			II = 0;
 			JJ++;
 			realPrecision = pwrErrBound[JJ];
-			updateReqLength = 0;			
-		}		
-		
+			updateReqLength = 0;
+		}
+
 		type_ = type[jj];
 		if (type_ != 0)
-		{			
+		{
 			pred1D = 2*(*data)[jj-1] - (*data)[jj-2];
 			(*data)[jj] = pred1D + 2 * (type_ - intvRadius) * realPrecision;
 		}
@@ -311,9 +311,9 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 			{
 				computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 				reqBytesLength = reqLength/8;
-				resiBitsLength = reqLength%8;				
+				resiBitsLength = reqLength%8;
 				updateReqLength = 1;
-			}			
+			}
 			// compute resiBits
 			resiBits = 0;
 			if (resiBitsLength != 0) {
@@ -365,7 +365,7 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 		if(ii%blockSize==0)
 			II++;
 		JJ = 0;
-		realPrecision = pwrErrBound[II*R2+JJ];				
+		realPrecision = pwrErrBound[II*R2+JJ];
 		updateReqLength = 0;
 
 		index = ii*r2;
@@ -383,10 +383,10 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 			{
 				computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 				reqBytesLength = reqLength/8;
-				resiBitsLength = reqLength%8;				
+				resiBitsLength = reqLength%8;
 				updateReqLength = 1;
 			}
-			
+
 			resiBits = 0;
 			if (resiBitsLength != 0) {
 				int kMod8 = k % 8;
@@ -435,7 +435,7 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 
 			if(jj%blockSize==0)
 				JJ++;
-			realPrecision = pwrErrBound[II*R2+JJ];			
+			realPrecision = pwrErrBound[II*R2+JJ];
 			updateReqLength = 0;
 
 			type_ = type[index];
@@ -451,10 +451,10 @@ void decompressDataSeries_double_2D_pwr(double** data, int r1, int r2, TightData
 				{
 					computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 					reqBytesLength = reqLength/8;
-					resiBitsLength = reqLength%8;				
+					resiBitsLength = reqLength%8;
 					updateReqLength = 1;
-				}						
-				
+				}
+
 				resiBits = 0;
 				if (resiBitsLength != 0) {
 					int kMod8 = k % 8;
@@ -521,14 +521,14 @@ double* extractRealPrecision_3D_double(int R1, int R2, int R3, int blockSize, Ti
 			{
 				tmpBytes[0] = bytes[p++];
 				tmpBytes[1] = bytes[p++];
-				result[IR+JR+k]=bytesToDouble(tmpBytes);				
+				result[IR+JR+k]=bytesToDouble(tmpBytes);
 			}
 		}
 	}
 	return result;
 }
 
-void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, TightDataPointStorageD* tdps) 
+void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, TightDataPointStorageD* tdps)
 {
 	updateQuantizationInfo(tdps->intervals);
 	int i, j, k = 0, p = 0, l = 0; // k is to track the location of residual_bit
@@ -537,8 +537,7 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 	// leadNum
 	int dataSeriesLength = r1*r2*r3;
 	int r23 = r2*r3;
-//	printf ("%d %d %d\n", r1, r2, r3);
-
+	
 	unsigned char* leadNum;
 
 	convertByteArray2IntArray_fast_2b(tdps->exactDataNum, tdps->leadNumArray, tdps->leadNumArray_size, &leadNum);
@@ -560,7 +559,7 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 	memset(preBytes, 0, 8);
 
 	int curByteIndex = 0;
-	int reqLength, reqBytesLength, resiBitsLength, resiBits, reqExpo, reqMantLength; 
+	int reqLength, reqBytesLength, resiBitsLength, resiBits, reqExpo, reqMantLength;
 	unsigned char leadingNum;
 	double medianValue, exactData, predValue, realPrecision;
 	int type_;
@@ -569,12 +568,12 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 
 	int blockSize = computeBlockEdgeSize_3D(tdps->segment_size);
 	int R1 = 1+(r1-1)/blockSize;
-	int R2 = 1+(r2-1)/blockSize;		
+	int R2 = 1+(r2-1)/blockSize;
 	int R3 = 1+(r3-1)/blockSize;
 	int R23 = R2*R3;
 	double* pwrErrBound = extractRealPrecision_3D_double(R1, R2, R3, blockSize, tdps);
 
-	realPrecision = pwrErrBound[0];	
+	realPrecision = pwrErrBound[0];
 	computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 	reqBytesLength = reqLength/8;
 	resiBitsLength = reqLength%8;
@@ -683,8 +682,8 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 			II = 0;//dimension 2 (mid)
 			JJ++;
 			realPrecision = pwrErrBound[JJ];
-			updateReqLength = 0;			
-		}		
+			updateReqLength = 0;
+		}
 		type_ = type[jj];
 		if (type_ != 0)
 		{
@@ -698,7 +697,7 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 			{
 				computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 				reqBytesLength = reqLength/8;
-				resiBitsLength = reqLength%8;				
+				resiBitsLength = reqLength%8;
 				updateReqLength = 1;
 			}
 
@@ -748,19 +747,19 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 	/* Process Row-1 --> Row-r2-1 */
 	for (ii = 1; ii < r2; ii++)
 	{
-		/* Process row-ii data 0 */		
+		/* Process row-ii data 0 */
 		if(ii%blockSize==0)
-			II++;		
+			II++;
 		JJ = 0;
 		realPrecision = pwrErrBound[II*R3+JJ];
-		updateReqLength = 0;		
+		updateReqLength = 0;
 
 		index = ii*r3;
-		
+
 		type_ = type[index];
 		if (type_ != 0)
 		{
-			pred1D = (*data)[index-r3];			
+			pred1D = (*data)[index-r3];
 			(*data)[index] = pred1D + 2 * (type_ - intvRadius) * realPrecision;
 		}
 		else
@@ -770,10 +769,10 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 			{
 				computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 				reqBytesLength = reqLength/8;
-				resiBitsLength = reqLength%8;				
+				resiBitsLength = reqLength%8;
 				updateReqLength = 1;
 			}
-			
+
 			resiBits = 0;
 			if (resiBitsLength != 0) {
 				int kMod8 = k % 8;
@@ -822,13 +821,13 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 
 			if(jj%blockSize==0)
 				JJ++;
-			realPrecision = pwrErrBound[II*R3+JJ];			
-			updateReqLength = 0;			
-			
+			realPrecision = pwrErrBound[II*R3+JJ];
+			updateReqLength = 0;
+
 			type_ = type[index];
 			if (type_ != 0)
 			{
-				pred2D = (*data)[index-1] + (*data)[index-r3] - (*data)[index-r3-1];				
+				pred2D = (*data)[index-1] + (*data)[index-r3] - (*data)[index-r3-1];
 				(*data)[index] = pred2D + 2 * (type_ - intvRadius) * realPrecision;
 			}
 			else
@@ -838,7 +837,7 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 				{
 					computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 					reqBytesLength = reqLength/8;
-					resiBitsLength = reqLength%8;				
+					resiBitsLength = reqLength%8;
 					updateReqLength = 1;
 				}
 
@@ -890,19 +889,19 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 	for (kk = 1; kk < r1; kk++)
 	{
 		/* Process Row-0 data 0*/
-		index = kk*r23;		
+		index = kk*r23;
 		if(kk%blockSize==0)
 			KK++;
 		II = 0;
 		JJ = 0;
 
-		realPrecision = pwrErrBound[KK*R23];			
-		updateReqLength = 0;			
+		realPrecision = pwrErrBound[KK*R23];
+		updateReqLength = 0;
 
 		type_ = type[index];
 		if (type_ != 0)
 		{
-			pred1D = (*data)[index-r23];			
+			pred1D = (*data)[index-r23];
 			(*data)[index] = pred1D + 2 * (type_ - intvRadius) * realPrecision;
 		}
 		else
@@ -912,7 +911,7 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 			{
 				computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 				reqBytesLength = reqLength/8;
-				resiBitsLength = reqLength%8;				
+				resiBitsLength = reqLength%8;
 				updateReqLength = 1;
 			}
 
@@ -967,13 +966,13 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 			if(jj%blockSize==0)
 				JJ++;
 
-			realPrecision = pwrErrBound[KK*R23+JJ];			
-			updateReqLength = 0;			
-			
+			realPrecision = pwrErrBound[KK*R23+JJ];
+			updateReqLength = 0;
+
 			type_ = type[index];
 			if (type_ != 0)
 			{
-				pred2D = (*data)[index-1] + (*data)[index-r23] - (*data)[index-r23-1];			
+				pred2D = (*data)[index-1] + (*data)[index-r23] - (*data)[index-r23-1];
 				(*data)[index] = pred2D + 2 * (type_ - intvRadius) * realPrecision;
 			}
 			else
@@ -983,10 +982,10 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 				{
 					computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 					reqBytesLength = reqLength/8;
-					resiBitsLength = reqLength%8;				
+					resiBitsLength = reqLength%8;
 					updateReqLength = 1;
 				}
-			
+
 				resiBits = 0;
 				if (resiBitsLength != 0) {
 					int kMod8 = k % 8;
@@ -1034,18 +1033,18 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 		{
 			/* Process Row-i data 0 */
 			index = kk*r23 + ii*r3;
-			
+
 			if(ii%blockSize==0)
 				II++;
 			JJ = 0;
-			
-			realPrecision = pwrErrBound[KK*R23+II*R3];			
-			updateReqLength = 0;						
+
+			realPrecision = pwrErrBound[KK*R23+II*R3];
+			updateReqLength = 0;
 
 			type_ = type[index];
 			if (type_ != 0)
 			{
-				pred2D = (*data)[index-r3] + (*data)[index-r23] - (*data)[index-r23-r3];				
+				pred2D = (*data)[index-r3] + (*data)[index-r23] - (*data)[index-r23-r3];
 				(*data)[index] = pred2D + 2 * (type_ - intvRadius) * realPrecision;
 			}
 			else
@@ -1055,7 +1054,7 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 				{
 					computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 					reqBytesLength = reqLength/8;
-					resiBitsLength = reqLength%8;				
+					resiBitsLength = reqLength%8;
 					updateReqLength = 1;
 				}
 
@@ -1107,14 +1106,14 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 				if(jj%blockSize==0)
 					JJ++;
 
-				realPrecision = pwrErrBound[KK*R23+II*R3+JJ];			
-				updateReqLength = 0;				
+				realPrecision = pwrErrBound[KK*R23+II*R3+JJ];
+				updateReqLength = 0;
 
 				type_ = type[index];
 				if (type_ != 0)
 				{
 					pred3D = (*data)[index-1] + (*data)[index-r3] + (*data)[index-r23]
-					- (*data)[index-r3-1] - (*data)[index-r23-r3] - (*data)[index-r23-1] + (*data)[index-r23-r3-1];					
+					- (*data)[index-r3-1] - (*data)[index-r23-r3] - (*data)[index-r23-1] + (*data)[index-r23-r3-1];
 					(*data)[index] = pred3D + 2 * (type_ - intvRadius) * realPrecision;
 				}
 				else
@@ -1124,10 +1123,10 @@ void decompressDataSeries_double_3D_pwr(double** data, int r1, int r2, int r3, T
 					{
 						computeReqLength_double(realPrecision, tdps->radExpo, &reqLength, &medianValue);
 						reqBytesLength = reqLength/8;
-						resiBitsLength = reqLength%8;				
+						resiBitsLength = reqLength%8;
 						updateReqLength = 1;
 					}
-				
+
 					resiBits = 0;
 					if (resiBitsLength != 0) {
 						int kMod8 = k % 8;

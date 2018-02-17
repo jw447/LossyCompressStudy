@@ -8,7 +8,7 @@ import random
 import argparse
 import re
 
-sample_ratio = 0.01
+sample_ratio = 0.1
 chunksize = 40
 blksize = 4
 def prefixSample(inputfile, outputfile, ratio):
@@ -54,6 +54,7 @@ def intervalSample(inputfile, outputfile, opt, ratio):
         fout.close()
 
 def randomSample(inputfile, outputfile, opt, ratio):
+    print(outputfile)
     statinfo = os.stat(inputfile)
     fsize = statinfo.st_size
     original_elem_count = fsize / 8
@@ -75,7 +76,8 @@ def randomSample(inputfile, outputfile, opt, ratio):
             for i in sorted(sampleidx):
                 samplepoints += a[i*chunksize:(i+1)*chunksize]
 
-        print samplepoints[:10]
+        #print samplepoints[:10]
+	
         fout =  open(outputfile, 'wb')
         samplepoints.tofile(fout)
         fout.close()
@@ -152,9 +154,9 @@ def main():
     if args['sample'] == 'prefix':
         prefixSample(args['input'], 'prefixSample/' + args['input'], sample_ratio)
     if args['sample'] == 'interval':
-        randomSample(args['input'], args['randopt'] + 'intervalSample/' + args['input'], args['randopt'], sample_ratio)
+        randomSample(args['input'], 'sample_10/'+args['randopt'] + 'intervalSample/' + args['input'], args['randopt'], sample_ratio)
     if args['sample'] == 'random':
-        randomSample(args['input'], args['randopt'] + 'randomSample/' + args['input'], args['randopt'], sample_ratio)
+        randomSample(args['input'], 'sample_10/'+args['randopt'] + 'randomSample/' + args['input'], args['randopt'], sample_ratio)
     if args['sample'] == 'reconstruct':
         signalReconstruct(args['input'], 'reconstruct' + args['constructopt'] + '/' + re.split('/|\.', args['input'])[-2], args['constructopt'], int(args['num']))
     

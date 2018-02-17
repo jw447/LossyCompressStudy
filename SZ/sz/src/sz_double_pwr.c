@@ -492,6 +492,7 @@ int dataLength, int *outSize, double min, double max)
 
 	printf("datalength=%d\n",dataLength);
 	printf("----------factors\n");
+	int outlierSize = 0;
 	for(i=2;i<dataLength;i++)
 	{
 		curData = spaceFillingValue[i];
@@ -512,7 +513,6 @@ int dataLength, int *outSize, double min, double max)
 		if(predAbsErr<checkRadius)
 		{
 			state = (predAbsErr/realPrecision+1)/2;
-
 			hit = hit + 1;
 			if(curData>=pred)
 			{
@@ -543,9 +543,10 @@ int dataLength, int *outSize, double min, double max)
 		miss = miss + 1;
 		type[i] = 0;
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
-
+		printf("reqLength=%d\n",reqLength);
 		compressSingleDoubleValue(vce, curData, realPrecision, medianValue, reqLength, reqBytesLength, resiBitsLength);
 		updateLossyCompElement_Double(vce->curBytes, preDataBytes, reqBytesLength, resiBitsLength, lce);
+		//outlierSize = outlierSize +
 		memcpy(preDataBytes,vce->curBytes,4);
 		addExactData(exactMidByteArray, exactLeadNumArray, resiBitArray, lce);
 
@@ -554,6 +555,8 @@ int dataLength, int *outSize, double min, double max)
 	printf("----------\n");
 	printf("hit: %d\n",hit);
 	printf("miss: %d\n",miss);
+	printf("outlierSize: %d\n", outlierSize);
+
 
 
 	//	char* expSegmentsInBytes;
@@ -568,7 +571,18 @@ int dataLength, int *outSize, double min, double max)
 			resiBitArray->array, resiBitArray->size,
 			resiBitLengthArray->array, resiBitLengthArray->size,
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, pwrErrBoundBytes, pwrErrBoundBytes_size, radExpo);
-
+	printf("-------insight of tdps\n");
+	printf("dataLength=%d\n",dataLength);
+	printf("exactDataNum=%d\n",exactDataNum);
+	//printf("type=%d\n",type);
+	printf("realPrecision=%f\n",realPrecision);
+	printf("medianValue=%f\n",medianValue);
+	printf("reqLength=%d\n",reqLength);
+	printf("quantization_intervals=%d\n",quantization_intervals);
+	printf("pwrErrBoundBytes=%c\n",pwrErrBoundBytes);
+	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
+	printf("radExpo=%d\n",radExpo);
+	printf("-----------------------");
 	//free memory
 	free_DBA(resiBitLengthArray);
 	free_DIA(exactLeadNumArray);

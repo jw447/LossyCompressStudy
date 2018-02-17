@@ -1735,7 +1735,6 @@ void convertTDPStoFlatBytes_double_args(TightDataPointStorageD *tdps, unsigned c
 	}
 }
 
-
 void free_TightDataPointStorageD(TightDataPointStorageD *tdps)
 {
 	if(tdps->rtypeArray!=NULL)
