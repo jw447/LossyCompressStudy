@@ -401,15 +401,15 @@ int dataLength, int *outSize, double min, double max)
 	SZ_Reset();
 	printf("datalength=%d\n",dataLength);
 	int pwrLength = dataLength%segment_size==0?dataLength/segment_size:dataLength/segment_size+1;
-	printf("pwrLength=%d\n",pwrLength);
+	//printf("pwrLength=%d\n",pwrLength);
 	double* pwrErrBound = (double*)malloc(sizeof(double)*pwrLength);
 	int pwrErrBoundBytes_size = sizeof(unsigned char)*pwrLength*2;
-	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
+	//printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
 	unsigned char* pwrErrBoundBytes = (unsigned char*)malloc(pwrErrBoundBytes_size);
 
 	compute_segment_precisions_double_1D(oriData, dataLength, pwrErrBound, pwrErrBoundBytes);
-	printf("intvCapacity=%d\n",intvCapacity);
-	printf("intvRadius=%d\n",intvRadius);
+	//printf("intvCapacity=%d\n",intvCapacity);
+	//printf("intvRadius=%d\n",intvRadius);
 	unsigned int quantization_intervals;
 	if(optQuantMode==1)
 	{
@@ -491,7 +491,7 @@ int dataLength, int *outSize, double min, double max)
 	int miss = 0;
 
 	printf("datalength=%d\n",dataLength);
-	printf("----------factors\n");
+	//printf("----------factors\n");
 	int outlierSize = 0;
 	for(i=2;i<dataLength;i++)
 	{
@@ -524,7 +524,7 @@ int dataLength, int *outSize, double min, double max)
 				type[i] = intvRadius-state;
 				pred = pred - state*interval;
 			}
-			printf("%d\n",type[i]);
+			//printf("%d\n",type[i]);
 			// printf("pred=%f\n",pred);
 			listAdd_double(last3CmprsData, pred);
 			continue;
@@ -552,7 +552,7 @@ int dataLength, int *outSize, double min, double max)
 
 		listAdd_double(last3CmprsData, vce->data);
 	}//end of for
-	printf("----------\n");
+	//printf("----------\n");
 	printf("hit: %d\n",hit);
 	printf("miss: %d\n",miss);
 	printf("outlierSize: %d\n", outlierSize);
@@ -579,7 +579,7 @@ int dataLength, int *outSize, double min, double max)
 	printf("medianValue=%f\n",medianValue);
 	printf("reqLength=%d\n",reqLength);
 	printf("quantization_intervals=%d\n",quantization_intervals);
-	printf("pwrErrBoundBytes=%c\n",pwrErrBoundBytes);
+	//printf("pwrErrBoundBytes=%d\n",pwrErrBoundBytes);
 	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
 	printf("radExpo=%d\n",radExpo);
 	printf("-----------------------");

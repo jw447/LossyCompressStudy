@@ -6,12 +6,12 @@ We think the error tolerance plays an role in compression ratio for lossy compre
 
 ### Experiment Plan
 
-Typical SZ compression uses error bound: 
+Typical SZ compression uses error bound:
 
 absErrBound = 0.000001
 
 relBoundRatio = 1E-5
 
-pw_realBoundRatio = 1E-5
+pw_realBoundRatio = 1E-5 //what we are using
 
-1. We start with point-wise relative Bound Ratio. From 1E-10 to 1E-1, we collect the compression matrics(which includes the compression ratio).
+1. We start with point-wise relative Bound Ratio. From 1E-10 to 1E-0, we collect the compression matrics(which includes the compression ratio).
