@@ -256,7 +256,7 @@ int computeDataLength(int r5, int r4, int r3, int r2, int r1)
 
  **/
 /*-------------------------------------------------------------------------*/
-unsigned char* SZ_compress_args(int dataType, void *data, int *outSize, int errBoundMode, double absErrBound,
+unsigned char* SZ_compress_args(int dataType, void *data,double pwr_er, int *outSize, int errBoundMode, double absErrBound,
 double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
 {
 	//TODO
@@ -269,11 +269,11 @@ double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
 
 		return newByteData;
 	}
-	else if(dataType==SZ_DOUBLE)
+	else if(dataType==SZ_DOUBLE) //
 	{
 		unsigned char *newByteData;
-		SZ_compress_args_double(&newByteData, (double *)data, r5, r4, r3, r2, r1,
-		outSize, errBoundMode, absErrBound, relBoundRatio);
+		SZ_compress_args_double(&newByteData, (double *)data, pwr_er, r5, r4, r3, r2, r1,
+		outSize, errBoundMode, absErrBound, relBoundRatio); //
 
 		return newByteData;
 	}
@@ -284,51 +284,51 @@ double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
 	}
 }
 
-int SZ_compress_args2(int dataType, void *data, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
-{
-	unsigned char* bytes = SZ_compress_args(dataType, data, outSize, errBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
-    memcpy(compressed_bytes, bytes, *outSize);
-    free(bytes);
-	return SZ_SCES;
-}
+// int SZ_compress_args2(int dataType, void *data, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
+// {
+// 	unsigned char* bytes = SZ_compress_args(dataType, data, outSize, errBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
+//     memcpy(compressed_bytes, bytes, *outSize);
+//     free(bytes);
+// 	return SZ_SCES;
+// }
+//
+// int SZ_compress_args3(int dataType, void *data, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio,
+// int r5, int r4, int r3, int r2, int r1,
+// int R5, int R4, int R3, int R2, int R1)
+// {
+// 	if(dataType==SZ_FLOAT)
+// 	{
+// 		SZ_compress_args_float_subblock(compressed_bytes, (float *)data,
+// 		r5, r4, r3, r2, r1,
+// 		R5, R4, R3, R2, R1,
+// 		outSize, errBoundMode, absErrBound, relBoundRatio);
+//
+// 		return SZ_SCES;
+// 	}
+// 	else if(dataType==SZ_DOUBLE)
+// 	{
+// 		unsigned char *newByteData;
+// 		SZ_compress_args_double_subblock(compressed_bytes, (double *)data,
+// 		r5, r4, r3, r2, r1,
+// 		R5, R4, R3, R2, R1,
+// 		outSize, errBoundMode, absErrBound, relBoundRatio);
+//
+// 		return SZ_SCES;
+// 	}
+// 	else
+// 	{
+// 		printf("Error (in SZ_compress_args3): dataType can only be SZ_FLOAT or SZ_DOUBLE.\n");
+// 		return SZ_NSCS;
+// 	}
+// }
 
-int SZ_compress_args3(int dataType, void *data, unsigned char* compressed_bytes, int *outSize, int errBoundMode, double absErrBound, double relBoundRatio,
-int r5, int r4, int r3, int r2, int r1,
-int R5, int R4, int R3, int R2, int R1)
-{
-	if(dataType==SZ_FLOAT)
-	{
-		SZ_compress_args_float_subblock(compressed_bytes, (float *)data,
-		r5, r4, r3, r2, r1,
-		R5, R4, R3, R2, R1,
-		outSize, errBoundMode, absErrBound, relBoundRatio);
-
-		return SZ_SCES;
-	}
-	else if(dataType==SZ_DOUBLE)
-	{
-		unsigned char *newByteData;
-		SZ_compress_args_double_subblock(compressed_bytes, (double *)data,
-		r5, r4, r3, r2, r1,
-		R5, R4, R3, R2, R1,
-		outSize, errBoundMode, absErrBound, relBoundRatio);
-
-		return SZ_SCES;
-	}
-	else
-	{
-		printf("Error (in SZ_compress_args3): dataType can only be SZ_FLOAT or SZ_DOUBLE.\n");
-		return SZ_NSCS;
-	}
-}
-
-unsigned char *SZ_compress(int dataType, void *data, int *outSize, int r5, int r4, int r3, int r2, int r1)
+unsigned char *SZ_compress(int dataType, void *data, double pwr_er, int *outSize, int r5, int r4, int r3, int r2, int r1)
 {
 	int pointCount;
 	pointCount = computeDataLength(r5,r4,r3,r2,r1);
 	printf("point count: %d\n",pointCount);
 
-	unsigned char *newByteData = SZ_compress_args(dataType, data, outSize, errorBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
+	unsigned char *newByteData = SZ_compress_args(dataType, data, pwr_er, outSize, errorBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
 	return newByteData;
 }
 
@@ -540,9 +540,9 @@ unsigned char* SZ_batch_compress(int *outSize)
 		{
 			unsigned char *newByteData;
 			int outSize;
-			SZ_compress_args_double_wRngeNoGzip(&newByteData, (double *)p->data,
-			p->r5, p->r4, p->r3, p->r2, p->r1,
-			&(p->compressedSize), p->errBoundMode, p->absErrBound, p->relBoundRatio);
+			// //SZ_compress_args_double_wRngeNoGzip(&newByteData, (double *)p->data,
+			// p->r5, p->r4, p->r3, p->r2, p->r1,
+			// &(p->compressedSize), p->errBoundMode, p->absErrBound, p->relBoundRatio);
 
 			p->compressedBytes = newByteData;
 		}

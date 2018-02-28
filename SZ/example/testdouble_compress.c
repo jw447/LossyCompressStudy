@@ -39,43 +39,51 @@ int main(int argc, char * argv[])
     int r5=0,r4=0,r3=0,r2=0,r1=0;
     char outDir[640], oriFilePath[640], outputFilePath[640];
     char *cfgFile;
-    
-    if(argc < 3)
-    {
-	printf("Test case: testdouble_compress [config_file] [srcFilePath] [dimension sizes...]\n");
-	printf("Example: testdouble_compress sz.config testdouble_8_8_128.dat 8 8 128\n");
-	exit(0);
-    }
-   
+
+    // if(argc < 3)
+    // {
+    // 	printf("Test case: testdouble_compress [config_file] [srcFilePath] [dimension sizes...]\n");
+    // 	printf("Example: testdouble_compress sz.config testdouble_8_8_128.dat 8 8 128\n");
+    // 	exit(0);
+    // }  printf("oriFilePath=%s\n",oriFilePath);
+    //printf("outputFilePath=%s\n",outputFilePath);
+
     cfgFile=argv[1];
-    sprintf(oriFilePath, "%s", argv[2]);
-    if(argc>=4)
-    	r1 = atoi(argv[3]); //8
-    if(argc>=5)
-    	r2 = atoi(argv[4]); //8
-    if(argc>=6)
-	r3 = atoi(argv[5]); //128
-    if(argc>=7)
-    	r4 = atoi(argv[6]);
-    if(argc>=8)
-	r5 = atoi(argv[7]);
- 
-    printf("cfgFile=%s\n", cfgFile); 
+    sprintf(oriFilePath, "%s", argv[3]);
+
+
+    // if(argc>=4)
+    r1 = atoi(argv[4]); //file size
+    // if(argc>=5)
+    // 	r2 = atoi(argv[4]); //8
+    // if(argc>=6)
+	  //   r3 = atoi(argv[5]); //128
+    // if(argc>=7)
+    // 	r4 = atoi(argv[6]);
+    // if(argc>=8)
+	  //   r5 = atoi(argv[7]);
+
+    printf("cfgFile=%s\n", cfgFile);
     int status = SZ_Init(cfgFile);
-    
+
     sprintf(outputFilePath, "%s.sz", oriFilePath);
-   
+
     int nbEle;
     double *data = readDoubleData(oriFilePath, &nbEle, &status);
     if(status!=SZ_SCES)
     {
-	printf("Error: file %s cannot be read!\n", oriFilePath);
-	exit(0);
+    	printf("Error: file %s cannot be read!\n", oriFilePath);
+    	exit(0);
     }
-    
+
     int outSize;
-    cost_start(); 
-    unsigned char *bytes = SZ_compress(SZ_DOUBLE, data, &outSize, r5, r4, r3, r2, r1);
+    cost_start();
+    char* ptr;
+    double pwr_err = strtod(argv[2], &ptr);
+
+
+
+    unsigned char *bytes = SZ_compress(SZ_DOUBLE, data, pwr_err, &outSize, r5, r4, r3, r2, r1);
     //char *bytes = (char *)malloc(nbEle*sizeof(double)); //
     //char* bytes = SZ_compress_args(SZ_DOUBLE, data, &outSize, ABS, 1E-12, 0.000001, r5, r4, r3, r2, r1);
     cost_end();
@@ -84,15 +92,15 @@ int main(int argc, char * argv[])
     writeByteData(bytes, outSize, outputFilePath, &status);
     if(status!=SZ_SCES)
     {
-	printf("Error: file %s cannot be written!\n", outputFilePath);
-	free(data);
-	exit(0);
+    	printf("Error: file %s cannot be written!\n", outputFilePath);
+    	free(data);
+    	exit(0);
     }
     free(data);
     free(bytes);
     printf("done\n");
-    
+
     SZ_Finalize();
-    
+
     return 0;
 }

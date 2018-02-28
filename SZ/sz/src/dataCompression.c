@@ -99,8 +99,10 @@ double getRealPrecision_double(double valueRangeSize, int errBoundMode, double a
 		precision = min_d(absErrBound, relBoundRatio*valueRangeSize);
 	else if(errBoundMode==ABS_OR_REL)
 		precision = max_d(absErrBound, relBoundRatio*valueRangeSize);
-	else if(errBoundMode==PW_REL)
+	else if(errBoundMode==PW_REL){
+		//printf("errBoundMode=PW_REL\n");
 		precision = -1;
+	}
 	else
 	{
 		printf("Error: error-bound-mode is incorrect!\n");

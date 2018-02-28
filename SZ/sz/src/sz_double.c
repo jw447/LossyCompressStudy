@@ -975,57 +975,59 @@ int *outSize, int errBoundMode, double absErr_Bound, double rel_BoundRatio)
 
 }
 
-int SZ_compress_args_double_wRngeNoGzip(unsigned char** newByteData, double *oriData,
-int r5, int r4, int r3, int r2, int r1, int *outSize,
-int errBoundMode, double absErr_Bound, double rel_BoundRatio)
-{
-	int status = SZ_SCES;
-	int dataLength = computeDataLength(r5,r4,r3,r2,r1);
-	double valueRangeSize = 0, medianValue = 0;
+// int SZ_compress_args_double_wRngeNoGzip(unsigned char** newByteData, double *oriData,
+// int r5, int r4, int r3, int r2, int r1, int *outSize,
+// int errBoundMode, double absErr_Bound, double rel_BoundRatio)
+// {
+// 	int status = SZ_SCES;
+// 	int dataLength = computeDataLength(r5,r4,r3,r2,r1);
+// 	double valueRangeSize = 0, medianValue = 0;
+// 	double min = computeRangeSize_double(oriData, dataLength, &valueRangeSize, &medianValue);
+// 	double max = min+valueRangeSize;
+// 	double realPrecision = getRealPrecision_double(valueRangeSize, errBoundMode, absErr_Bound, rel_BoundRatio, &status);
+// 	//printf("realPrecision=%f\n",realPrecision);
+// 	if(valueRangeSize <= realPrecision)
+// 	{
+// 		SZ_compress_args_double_withinRange(newByteData, oriData, dataLength, outSize);
+// 	}
+// 	else
+// 	{
+// 		if(r5==0&&r4==0&&r3==0&&r2==0)
+// 		{
+// 			if(errBoundMode==PW_REL)
+// 				SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(newByteData, oriData, r1, outSize, min, max);
+// 			else
+// 				SZ_compress_args_double_NoCkRngeNoGzip_1D(newByteData, oriData, r1, realPrecision, outSize, valueRangeSize, medianValue);
+// 		}
+// 		else if(r5==0&&r4==0&&r3==0)
+// 		{
+// 			if(errBoundMode==PW_REL)
+// 				SZ_compress_args_double_NoCkRngeNoGzip_2D_pwr(newByteData, oriData, r2, r1, outSize, min, max);
+// 			else
+// 				SZ_compress_args_double_NoCkRngeNoGzip_2D(newByteData, oriData, r2, r1, realPrecision, outSize, valueRangeSize, medianValue);
+// 		}
+// 		else if(r5==0&&r4==0)
+// 			SZ_compress_args_double_NoCkRngeNoGzip_3D(newByteData, oriData, r3, r2, r1, realPrecision, outSize, valueRangeSize, medianValue);
+// 		else if(r5==0)
+// 			SZ_compress_args_double_NoCkRngeNoGzip_3D(newByteData, oriData, r4*r3, r2, r1, realPrecision, outSize, valueRangeSize, medianValue);
+// 	}
+// 	return status;
+// }
 
-	double min = computeRangeSize_double(oriData, dataLength, &valueRangeSize, &medianValue);
-	double max = min+valueRangeSize;
-	double realPrecision = getRealPrecision_double(valueRangeSize, errBoundMode, absErr_Bound, rel_BoundRatio, &status);
-	printf("realPrecision=%f\n",realPrecision);
-	if(valueRangeSize <= realPrecision)
-	{
-		SZ_compress_args_double_withinRange(newByteData, oriData, dataLength, outSize);
-	}
-	else
-	{
-		if(r5==0&&r4==0&&r3==0&&r2==0)
-		{
-			if(errBoundMode==PW_REL)
-				SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(newByteData, oriData, r1, outSize, min, max);
-			else
-				SZ_compress_args_double_NoCkRngeNoGzip_1D(newByteData, oriData, r1, realPrecision, outSize, valueRangeSize, medianValue);
-		}
-		else if(r5==0&&r4==0&&r3==0)
-		{
-			if(errBoundMode==PW_REL)
-				SZ_compress_args_double_NoCkRngeNoGzip_2D_pwr(newByteData, oriData, r2, r1, outSize, min, max);
-			else
-				SZ_compress_args_double_NoCkRngeNoGzip_2D(newByteData, oriData, r2, r1, realPrecision, outSize, valueRangeSize, medianValue);
-		}
-		else if(r5==0&&r4==0)
-			SZ_compress_args_double_NoCkRngeNoGzip_3D(newByteData, oriData, r3, r2, r1, realPrecision, outSize, valueRangeSize, medianValue);
-		else if(r5==0)
-			SZ_compress_args_double_NoCkRngeNoGzip_3D(newByteData, oriData, r4*r3, r2, r1, realPrecision, outSize, valueRangeSize, medianValue);
-	}
-	return status;
-}
-
-int SZ_compress_args_double(unsigned char** newByteData, double *oriData,
+int SZ_compress_args_double(unsigned char** newByteData, double *oriData,  double pwr_er,
 int r5, int r4, int r3, int r2, int r1, int *outSize,
 int errBoundMode, double absErr_Bound, double relBoundRatio)
 {
 	int status = SZ_SCES;
 	int dataLength = computeDataLength(r5,r4,r3,r2,r1);
 	double valueRangeSize = 0, medianValue = 0;
-
+	//printf("errBoundMode=%d\n",errBoundMode);
+	//printf("relBoundRatio=%f\n",relBoundRatio);
+	//printf("absErr_Bound=%f\n",absErr_Bound);
 	double min = computeRangeSize_double(oriData, dataLength, &valueRangeSize, &medianValue);
 	double max = min+valueRangeSize;
 	double realPrecision = getRealPrecision_double(valueRangeSize, errBoundMode, absErr_Bound, relBoundRatio, &status);
+	//printf("realPrecision=%f\n",realPrecision);
 
 	if(valueRangeSize <= realPrecision)
 	{
@@ -1037,8 +1039,9 @@ int errBoundMode, double absErr_Bound, double relBoundRatio)
 		unsigned char* tmpByteData;
 		if (r2==0)
 		{
-			if(errBoundMode==PW_REL)
-				SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(&tmpByteData, oriData, r1, &tmpOutSize, min, max);
+			if(errBoundMode==PW_REL){
+				SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(&tmpByteData, oriData, pwr_er, r1, &tmpOutSize, min, max);//
+			}
 			else
 				SZ_compress_args_double_NoCkRngeNoGzip_1D(&tmpByteData, oriData, r1, realPrecision, &tmpOutSize, valueRangeSize, medianValue);
 		}

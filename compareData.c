@@ -25,9 +25,9 @@ int main(int argc, char *argv[]){
     //fread(ptr, sizeof(float), 6, stream);
     fread(ptr1, sizeof(double), sz, stream1);
     fread(ptr2, sizeof(double), sz, stream2);
-    for(int i=0;i<500;i++){
-        printf("%lf, %lf, %lf\n", ptr1[i], ptr2[i], ptr2[i] - ptr1[i]);
-    }
+    //for(int i=0;i<500;i++){
+    //    printf("%lf, %lf, %lf\n", ptr1[i], ptr2[i], ptr2[i] - ptr1[i]);
+    //}
     double rd = 0;
     double ad = 0;
     for(int i=0;i<sz;i++){

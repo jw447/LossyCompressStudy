@@ -9,7 +9,7 @@ a=0.001
 f=1
 
 #fpc parameters
-fpce=20 
+fpce=20
 
 #sz parameters
 cfg="sz.config"
@@ -21,7 +21,6 @@ e=0.000118
 loop=20
 
 usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile>]" 1>&2; exit 1; }
-
 
 # zfpaction(){
 #     inputFILESIZE=$(stat -c%s "$i")
@@ -50,7 +49,7 @@ usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile
 # }
 
 # runisb(){
-#     isbaction 
+#     isbaction
 #     out=`./compareData $i $t.out $isbe`
 #     err=$(echo $out | awk -F"average absolute error value:" '{sub(/ .*/,"",$2);print $2}')
 #     echo "absolute err: "$err
@@ -61,13 +60,13 @@ usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile
 #     while [ "$c" != 0 ] && [ $x -le $loop ]
 #     do
 #         if [ "$c" -eq  1 ] ; then
-#             e=$(echo $e | awk '{printf "%10.10f", $1 * 0.7}') 
+#             e=$(echo $e | awk '{printf "%10.10f", $1 * 0.7}')
 #         elif [ "$c" -eq -1 ] ; then
-#             e=$(echo $e | awk '{printf "%10.10f", 100 <= ( $1 * 1.3 ) ? 100 : ( $1 * 1.3 ) }') 
+#             e=$(echo $e | awk '{printf "%10.10f", 100 <= ( $1 * 1.3 ) ? 100 : ( $1 * 1.3 ) }')
 #         fi
 #         echo "tried $x times"
 #         (( x++ ))
-#         isbaction 
+#         isbaction
 #         out=`./compareData $i $t.out $isbe`
 #         err=$(echo $out | awk -F"average absolute error value:" '{sub(/ .*/,"",$2);print $2}')
 #         echo "absolute err: "$err
@@ -79,7 +78,7 @@ usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile
 # }
 
 # runzfp(){
-#     zfpaction 
+#     zfpaction
 #     out=`./compareData $i $t.out $e`
 #     echo $out
 #     err=$(echo $out | awk -F"average absolute error value:" '{sub(/ .*/,"",$2);print $2}')
@@ -91,13 +90,13 @@ usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile
 #     while [ "$c" != 0 ] && [ $x -le $loop ]
 #     do
 #         if [ "$c" -eq  1 ] ; then
-#             a=$(echo $a | awk '{printf "%10.10f", $1 * 0.7}') 
+#             a=$(echo $a | awk '{printf "%10.10f", $1 * 0.7}')
 #         elif [ "$c" -eq -1 ] ; then
-#             a=$(echo $a | awk '{printf "%10.10f", $1 * 1.3}') 
+#             a=$(echo $a | awk '{printf "%10.10f", $1 * 1.3}')
 #         fi
 #         echo "tried $x times"
 #         (( x++ ))
-#         zfpaction 
+#         zfpaction
 #         out=`./compareData $i $t.out $e`
 #         err=$(echo $out | awk -F"average absolute error value:" '{sub(/ .*/,"",$2);print $2}')
 #         echo "absolute err: "$err
@@ -137,16 +136,16 @@ usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile
 runsz(){
     inputFILESIZE=$(stat -c%s "$i")
     sze=`expr $inputFILESIZE / 8`
-    /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_compress ${cfg} $i $sze 
+    /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_compress ${cfg} $i $sze
     outputFILESIZE=$(stat -c%s "$i.sz")
-    echo $inputFILESIZE
-    echo $outputFILESIZE
+    echo input file size: $inputFILESIZE
+    echo output file size: $outputFILESIZE
     echo "$inputFILESIZE $outputFILESIZE" | awk '{printf "sz compression ratio, %.2f \n", $1/$2}'
     # /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_decompress ${cfg} $i.sz $sze
     # ../compareData $i $i.sz.out $sze
 }
 
-while getopts ":c:i:t:" o; do
+while getopts ":c:i:t:" o; do           # e is for different pwr_errorbound
     case "${o}" in
         c)
             c=${OPTARG}

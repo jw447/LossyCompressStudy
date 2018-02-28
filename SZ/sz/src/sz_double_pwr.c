@@ -22,10 +22,11 @@
 #include "zlib.h"
 #include "rw.h"
 
-void compute_segment_precisions_double_1D(double *oriData, int dataLength, double* pwrErrBound, unsigned char* pwrErrBoundBytes)
+void compute_segment_precisions_double_1D(double *oriData, int dataLength,double pwr_err, double* pwrErrBound, unsigned char* pwrErrBoundBytes)
 {
 	int i = 0, j = 0, k = 0;
-	double realPrecision = oriData[0]!=0?fabs(pw_relBoundRatio*oriData[0]):pw_relBoundRatio;
+	printf("pw_relBoundRatio=%f\n",pwr_err); // used to be pw_relBoundRatio
+	double realPrecision = oriData[0]!=0?fabs(pwr_err*oriData[0]):pwr_err; //precision = origin[0] * pwr_err
 	double approxPrecision;
 	unsigned char realPrecBytes[8];
 	double curPrecision;
@@ -44,11 +45,11 @@ void compute_segment_precisions_double_1D(double *oriData, int dataLength, doubl
 			//put the two bytes in pwrErrBoundBytes
 			pwrErrBoundBytes[k++] = realPrecBytes[0];
 			pwrErrBoundBytes[k++] = realPrecBytes[1];
-			realPrecision = curValue!=0?fabs(pw_relBoundRatio*curValue):pw_relBoundRatio;
+			realPrecision = curValue!=0?fabs(pwr_err*curValue):pwr_err;
 		}
 		else if(curValue!=0)
 		{
-			curPrecision = fabs(pw_relBoundRatio*curValue);
+			curPrecision = fabs(pwr_err*curValue);
 			if(realPrecision>curPrecision)
 				realPrecision = curPrecision;
 		}
@@ -395,21 +396,20 @@ unsigned int optimize_intervals_double_3D_pwr(double *oriData, int r1, int r2, i
 	return powerOf2;
 }
 
-void SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(unsigned char** newByteData, double *oriData,
+void SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(unsigned char** newByteData, double *oriData, double pwr_err,
 int dataLength, int *outSize, double min, double max)
 {
 	SZ_Reset();
-	printf("datalength=%d\n",dataLength);
+	//printf("datalength=%d\n",dataLength);
 	int pwrLength = dataLength%segment_size==0?dataLength/segment_size:dataLength/segment_size+1;
-	//printf("pwrLength=%d\n",pwrLength);
+	printf("pwrLength=%d\n",pwrLength);
 	double* pwrErrBound = (double*)malloc(sizeof(double)*pwrLength);
 	int pwrErrBoundBytes_size = sizeof(unsigned char)*pwrLength*2;
-	//printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
+	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
 	unsigned char* pwrErrBoundBytes = (unsigned char*)malloc(pwrErrBoundBytes_size);
 
-	compute_segment_precisions_double_1D(oriData, dataLength, pwrErrBound, pwrErrBoundBytes);
-	//printf("intvCapacity=%d\n",intvCapacity);
-	//printf("intvRadius=%d\n",intvRadius);
+	compute_segment_precisions_double_1D(oriData, dataLength, pwr_err, pwrErrBound, pwrErrBoundBytes);
+
 	unsigned int quantization_intervals;
 	if(optQuantMode==1)
 	{
@@ -490,9 +490,9 @@ int dataLength, int *outSize, double min, double max)
 	int hit = 0;
 	int miss = 0;
 
-	printf("datalength=%d\n",dataLength);
+	//printf("datalength=%d\n",dataLength);
 	//printf("----------factors\n");
-	int outlierSize = 0;
+	//int outlierSize = 0;
 	for(i=2;i<dataLength;i++)
 	{
 		curData = spaceFillingValue[i];
@@ -543,7 +543,7 @@ int dataLength, int *outSize, double min, double max)
 		miss = miss + 1;
 		type[i] = 0;
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
-		printf("reqLength=%d\n",reqLength);
+		//printf("reqLength=%d\n",reqLength);
 		compressSingleDoubleValue(vce, curData, realPrecision, medianValue, reqLength, reqBytesLength, resiBitsLength);
 		updateLossyCompElement_Double(vce->curBytes, preDataBytes, reqBytesLength, resiBitsLength, lce);
 		//outlierSize = outlierSize +
@@ -555,9 +555,7 @@ int dataLength, int *outSize, double min, double max)
 	//printf("----------\n");
 	printf("hit: %d\n",hit);
 	printf("miss: %d\n",miss);
-	printf("outlierSize: %d\n", outlierSize);
-
-
+	//printf("outlierSize: %d\n", outlierSize);
 
 	//	char* expSegmentsInBytes;
 	//	int expSegmentsInBytes_size = convertESCToBytes(esc, &expSegmentsInBytes);
@@ -582,7 +580,7 @@ int dataLength, int *outSize, double min, double max)
 	//printf("pwrErrBoundBytes=%d\n",pwrErrBoundBytes);
 	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
 	printf("radExpo=%d\n",radExpo);
-	printf("-----------------------");
+	printf("-----------------------\n");
 	//free memory
 	free_DBA(resiBitLengthArray);
 	free_DIA(exactLeadNumArray);
