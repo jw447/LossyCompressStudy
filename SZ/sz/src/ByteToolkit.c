@@ -6,18 +6,18 @@
  *  (C) 2016 by Mathematics and Computer Science (MCS), Argonne National Laboratory.
  *      See COPYRIGHT in top-level directory.
  */
- 
+
 #include <stdlib.h>
-#include "sz.h" 
-	
+#include "sz.h"
+
 int bytesToInt_bigEndian(unsigned char* bytes)
 {
 	int temp = 0;
 	int res = 0;
-	
+
 	res <<= 8;
 	temp = bytes[0] & 0xff;
-	res |= temp;	
+	res |= temp;
 
 	res <<= 8;
 	temp = bytes[1] & 0xff;
@@ -26,11 +26,11 @@ int bytesToInt_bigEndian(unsigned char* bytes)
 	res <<= 8;
 	temp = bytes[2] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = bytes[3] & 0xff;
-	res |= temp;		
-	
+	res |= temp;
+
 	return res;
 }
 
@@ -40,11 +40,11 @@ int bytesToInt_bigEndian(unsigned char* bytes)
  * */
 void intToBytes_bigEndian(unsigned char *b, unsigned int num)
 {
-	b[0] = (unsigned char)(num >> 24);	
-	b[1] = (unsigned char)(num >> 16);	
-	b[2] = (unsigned char)(num >> 8);	
-	b[3] = (unsigned char)(num);	
-	
+	b[0] = (unsigned char)(num >> 24);
+	b[1] = (unsigned char)(num >> 16);
+	b[2] = (unsigned char)(num >> 8);
+	b[3] = (unsigned char)(num);
+
 	//note: num >> xxx already considered endian_type...
 //if(dataEndianType==LITTLE_ENDIAN_DATA)
 //		symTransform_4bytes(*b); //change to BIG_ENDIAN_DATA
@@ -65,35 +65,35 @@ long bytesToLong_bigEndian(unsigned char* b) {
 	res <<= 8;
 	temp = b[1] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = b[2] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = b[3] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = b[4] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = b[5] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = b[6] & 0xff;
 	res |= temp;
-	
+
 	res <<= 8;
 	temp = b[7] & 0xff;
-	res |= temp;						
-	
+	res |= temp;
+
 	return res;
 }
 
-void longToBytes_bigEndian(unsigned char *b, unsigned long num) 
+void longToBytes_bigEndian(unsigned char *b, unsigned long num)
 {
 	b[0] = (unsigned char)(num>>56);
 	b[1] = (unsigned char)(num>>48);
@@ -130,7 +130,7 @@ short getExponent_float(float value)
 	lfloat lbuf;
 	lbuf.value = value;
 	int ivalue = lbuf.ivalue;
-	
+
 	int expValue = (ivalue & 0x7F800000) >> 23;
 	expValue -= 127;
 	return (short)expValue;
@@ -141,23 +141,23 @@ short getPrecisionReqLength_float(float precision)
 	lfloat lbuf;
 	lbuf.value = precision;
 	int ivalue = lbuf.ivalue;
-	
+
 	int expValue = (ivalue & 0x7F800000) >> 23;
 	expValue -= 127;
 //	unsigned char the1stManBit = (unsigned char)((ivalue & 0x00400000) >> 22);
 //	if(the1stManBit==1)
-//		expValue--;	
+//		expValue--;
 	return (short)expValue;
 }
 
 short getExponent_double(double value)
 {
 	//long lvalue = doubleToBigEndianLong(value);
-	
+
 	ldouble lbuf;
 	lbuf.value = value;
 	long lvalue = lbuf.lvalue;
-	
+
 	int expValue = (int)((lvalue & 0x7FF0000000000000) >> 52);
 	expValue -= 1023;
 	return (short)expValue;
@@ -168,7 +168,7 @@ short getPrecisionReqLength_double(double precision)
 	ldouble lbuf;
 	lbuf.value = precision;
 	long lvalue = lbuf.lvalue;
-	
+
 	int expValue = (int)((lvalue & 0x7FF0000000000000) >> 52);
 	expValue -= 1023;
 //	unsigned char the1stManBit = (unsigned char)((lvalue & 0x0008000000000000) >> 51);
@@ -222,7 +222,7 @@ short bytesToShort(unsigned char* bytes)
 {
 	lshort buf;
 	memcpy(buf.byte, bytes, 2);
-	
+
 	return buf.svalue;
 }
 
@@ -246,7 +246,7 @@ float bytesToFloat(unsigned char* bytes)
 	lfloat buf;
 	memcpy(buf.byte, bytes, 4);
 	if(sysEndianType==LITTLE_ENDIAN_SYSTEM)
-		symTransform_4bytes(buf.byte);	
+		symTransform_4bytes(buf.byte);
 	return buf.value;
 }
 
@@ -256,7 +256,7 @@ void floatToBytes(unsigned char *b, float num)
 	buf.value = num;
 	memcpy(b, buf.byte, 4);
 	if(sysEndianType==LITTLE_ENDIAN_SYSTEM)
-		symTransform_4bytes(b);		
+		symTransform_4bytes(b);
 }
 
 //the byte to input is in the big-endian format
@@ -275,7 +275,8 @@ void doubleToBytes(unsigned char *b, double num)
 	buf.value = num;
 	memcpy(b, buf.byte, 8);
 	if(sysEndianType==LITTLE_ENDIAN_SYSTEM)
-		symTransform_8bytes(b);
+		symTransform_8bytes(b); // symmetrical transform 0-7 1-6 2-5 3-4
+  // printf("b=%s\n",b);
 }
 
 int extractBytes(unsigned char* byteArray, int k, int validLength)
@@ -289,11 +290,11 @@ int extractBytes(unsigned char* byteArray, int k, int validLength)
 		byteNum = length/8;
 	else
 		byteNum = length/8+1;
-	
+
 	int i;
 	for(i = 0;i<byteNum;i++)
 		intBytes[4-byteNum+i] = byteArray[outIndex+i];
-	
+
 	int result = bytesToInt_bigEndian(intBytes);
 	int rightMovSteps = innerIndex +(8 - (innerIndex+validLength)%8)%8;
 	result = result << innerIndex;
@@ -310,12 +311,12 @@ int extractBytes(unsigned char* byteArray, int k, int validLength)
 		break;
 	case 4:
 		break;
-	default: 
+	default:
 		printf("Error: other cases are impossible...\n");
 		exit(0);
 	}
 	result = result >> rightMovSteps;
-	
+
 	return result;
 }
 
@@ -374,7 +375,7 @@ int getRightMovingCode(int kMod8, int resiBitLength)
 			return 0XFE;
 		default:
 			return 0;
-		}    		
+		}
 	}
 	else //if(rightMovingSteps >= 0)
 	{
@@ -397,7 +398,7 @@ unsigned short* convertByteDataToShortArray(unsigned char* bytes, int byteLength
 		states[i] = ls.svalue;
 	}
 	return states;
-} 
+}
 
 void convertShortArrayToBytes(unsigned short* states, int stateLength, unsigned char* bytes)
 {

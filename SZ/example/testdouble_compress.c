@@ -81,15 +81,15 @@ int main(int argc, char * argv[])
     char* ptr;
     double pwr_err = strtod(argv[2], &ptr);
 
-
-
     unsigned char *bytes = SZ_compress(SZ_DOUBLE, data, pwr_err, &outSize, r5, r4, r3, r2, r1);
     //char *bytes = (char *)malloc(nbEle*sizeof(double)); //
     //char* bytes = SZ_compress_args(SZ_DOUBLE, data, &outSize, ABS, 1E-12, 0.000001, r5, r4, r3, r2, r1);
     cost_end();
     printf("timecost, %f, seconds\n",totalCost);
-
+    // printf("-example outSize- = %d\n",outSize);
     writeByteData(bytes, outSize, outputFilePath, &status);
+    // printf("bytes = %d\n",sizeof(bytes));
+
     if(status!=SZ_SCES)
     {
     	printf("Error: file %s cannot be written!\n", outputFilePath);

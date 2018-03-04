@@ -27,7 +27,7 @@ void free2DArray_float(float** data, int m)
 	int i = 0;
 	for(i=0;i<m;i++)
 		free(data[i]);
-	free(data);	
+	free(data);
 }
 
 float*** create3DArray_float(int p, int m, int n)
@@ -52,7 +52,7 @@ void free3DArray_float(float*** data, int p, int m)
 			free(data[i][j]);
 		free(data[i]);
 	}
-	free(data);	
+	free(data);
 }
 
 double** create2DArray_double(int m, int n)
@@ -61,7 +61,7 @@ double** create2DArray_double(int m, int n)
 	double **data = (double**)malloc(sizeof(double*)*m);
 	for(i=0;i<m;i++)
 			data[i] = (double*)malloc(sizeof(double)*n);
-			
+
 	return data;
 }
 
@@ -70,7 +70,7 @@ void free2DArray_double(double** data, int m)
 	int i;
 	for(i=0;i<m;i++)
 		free(data[i]);
-	free(data);	
+	free(data);
 }
 
 double*** create3DArray_double(int p, int m, int n)
@@ -95,7 +95,7 @@ void free3DArray_double(double*** data, int p, int m)
 			free(data[i][j]);
 		free(data[i]);
 	}
-	free(data);	
+	free(data);
 }
 
 int checkFileSize(char *srcFilePath, int *status)
@@ -127,9 +127,9 @@ unsigned char *readByteData(char *srcFilePath, int *byteLength, int *status)
 	fseek(pFile, 0, SEEK_END);
     *byteLength = (int)ftell(pFile);
     fclose(pFile);
-    
+
     unsigned char *byteBuf = ( unsigned char *)malloc((*byteLength)*sizeof(unsigned char)); //sizeof(char)==1
-    
+
     pFile = fopen(srcFilePath, "rb");
     if (pFile == NULL)
     {
@@ -155,7 +155,7 @@ double *readDoubleData(char *srcFilePath, int *nbEle, int *status)
 	else
 	{
 		int i,j;
-		
+
 		int byteLength;
 		unsigned char* bytes = readByteData(srcFilePath, &byteLength, &state);
 		if(state==SZ_FERR)
@@ -165,7 +165,7 @@ double *readDoubleData(char *srcFilePath, int *nbEle, int *status)
 		}
 		double *daBuf = (double *)malloc(byteLength);
 		*nbEle = byteLength/8;
-		
+
 		ldouble buf;
 		for(i = 0;i<*nbEle;i++)
 		{
@@ -191,7 +191,7 @@ float *readFloatData(char *srcFilePath, int *nbEle, int *status)
 	else
 	{
 		int i,j;
-		
+
 		int byteLength;
 		unsigned char* bytes = readByteData(srcFilePath, &byteLength, &state);
 		if(state == SZ_FERR)
@@ -201,7 +201,7 @@ float *readFloatData(char *srcFilePath, int *nbEle, int *status)
 		}
 		float *daBuf = (float *)malloc(byteLength);
 		*nbEle = byteLength/4;
-		
+
 		lfloat buf;
 		for(i = 0;i<*nbEle;i++)
 		{
@@ -229,9 +229,9 @@ double *readDoubleData_systemEndian(char *srcFilePath, int *nbEle, int *status)
     inSize = ftell(pFile);
     *nbEle = (int)inSize/8; //only support double in this version
     fclose(pFile);
-    
+
     double *daBuf = (double *)malloc(inSize);
-    
+
     pFile = fopen(srcFilePath, "rb");
     if (pFile == NULL)
     {
@@ -257,17 +257,17 @@ float *readFloatData_systemEndian(char *srcFilePath, int *nbEle, int *status)
     }
 	fseek(pFile, 0, SEEK_END);
     inSize = ftell(pFile);
-    *nbEle = (int)inSize/4; 
+    *nbEle = (int)inSize/4;
     fclose(pFile);
-    
+
     if(inSize<=0)
     {
 		printf("Error: input file is wrong!\n");
 		*status = SZ_FERR;
 	}
-    
+
     float *daBuf = (float *)malloc(inSize);
-    
+
     pFile = fopen(srcFilePath, "rb");
     if (pFile == NULL)
     {
@@ -283,6 +283,7 @@ float *readFloatData_systemEndian(char *srcFilePath, int *nbEle, int *status)
 
 void writeByteData(unsigned char *bytes, int byteLength, char *tgtFilePath, int *status)
 {
+	// printf("bytelength=%d\n",byteLength);
 	FILE *pFile = fopen(tgtFilePath, "wb");
     if (pFile == NULL)
     {
@@ -290,7 +291,7 @@ void writeByteData(unsigned char *bytes, int byteLength, char *tgtFilePath, int 
         *status = SZ_FERR;
         return;
     }
-    
+
     fwrite(bytes, 1, byteLength, pFile); //write outSize bytes
     fclose(pFile);
     *status = SZ_SCES;
@@ -307,13 +308,13 @@ void writeDoubleData(double *data, int nbEle, char *tgtFilePath, int *status)
         *status = SZ_FERR;
         return;
     }
-    
+
     for(i = 0;i<nbEle;i++)
 	{
 		sprintf(s,"%.20G\n",data[i]);
 		fputs(s, pFile);
 	}
-    
+
     fclose(pFile);
     *status = SZ_SCES;
 }
@@ -329,7 +330,7 @@ void writeFloatData(float *data, int nbEle, char *tgtFilePath, int *status)
         *status = SZ_FERR;
         return;
     }
-   
+
     for(i = 0;i<nbEle;i++)
 	{
 		//printf("i=%d\n",i);
@@ -337,7 +338,7 @@ void writeFloatData(float *data, int nbEle, char *tgtFilePath, int *status)
 		sprintf(s,"%.30G\n",data[i]);
 		fputs(s, pFile);
 	}
-    
+
     fclose(pFile);
     *status = SZ_SCES;
 }
@@ -353,7 +354,7 @@ void writeData(void *data, int dataType, int nbEle, char *tgtFilePath, int *stat
 	else if(dataType == SZ_DOUBLE)
 	{
 		double* dataArray = (double *)data;
-		writeDoubleData(dataArray, nbEle, tgtFilePath, &state);	
+		writeDoubleData(dataArray, nbEle, tgtFilePath, &state);
 	}
 	else
 	{
@@ -375,7 +376,7 @@ void writeFloatData_inBytes(float *data, int nbEle, char* tgtFilePath, int *stat
 		bytes[i*4+0] = buf.byte[0];
 		bytes[i*4+1] = buf.byte[1];
 		bytes[i*4+2] = buf.byte[2];
-		bytes[i*4+3] = buf.byte[3];					
+		bytes[i*4+3] = buf.byte[3];
 	}
 
 	int byteLength = nbEle*sizeof(float);

@@ -274,7 +274,7 @@ double relBoundRatio, int r5, int r4, int r3, int r2, int r1)
 		unsigned char *newByteData;
 		SZ_compress_args_double(&newByteData, (double *)data, pwr_er, r5, r4, r3, r2, r1,
 		outSize, errBoundMode, absErrBound, relBoundRatio); //
-
+		// printf("szcompress args size: %d\n",*outSize);
 		return newByteData;
 	}
 	else
@@ -326,9 +326,12 @@ unsigned char *SZ_compress(int dataType, void *data, double pwr_er, int *outSize
 {
 	int pointCount;
 	pointCount = computeDataLength(r5,r4,r3,r2,r1);
-	printf("point count: %d\n",pointCount);
+
 
 	unsigned char *newByteData = SZ_compress_args(dataType, data, pwr_er, outSize, errorBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
+	// printf("szcompress size: %d\n",*outSize);
+	// printf("bytedata = %d\n",sizeof(newByteData));
+	// printf("outSize = %d\n",sizeof(outSize));
 	return newByteData;
 }
 

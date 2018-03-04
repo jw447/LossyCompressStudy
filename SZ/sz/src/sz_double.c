@@ -1041,6 +1041,7 @@ int errBoundMode, double absErr_Bound, double relBoundRatio)
 		{
 			if(errBoundMode==PW_REL){
 				SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(&tmpByteData, oriData, pwr_er, r1, &tmpOutSize, min, max);//
+				// printf("szcompress DOUBLE size: %d\n",tmpOutSize);
 			}
 			else
 				SZ_compress_args_double_NoCkRngeNoGzip_1D(&tmpByteData, oriData, r1, realPrecision, &tmpOutSize, valueRangeSize, medianValue);
@@ -1092,6 +1093,7 @@ int errBoundMode, double absErr_Bound, double relBoundRatio)
 			status = SZ_MERR;
 		}
 	}
+	printf("gZIP Compression output size: %d\n",*outSize);
 	SZ_ReleaseHuffman();
 	return status;
 }

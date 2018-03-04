@@ -55,17 +55,21 @@ void new_LossyCompressionElement(LossyCompressionElement *lce, int leadingNum, u
 int intMidBytes_Length, int resiMidBitsLength, int resiBits)
 {
 	lce->leadingZeroBytes = leadingNum; //0,1,2,or 3
+	// printf("leadingNum:%d\n",sizeof(leadingNum));
 	memcpy(lce->integerMidBytes,intMidBytes,intMidBytes_Length);
 	lce->integerMidBytes_Length = intMidBytes_Length; //they are mid_bits actually
+	// printf("intMidBytes_Length:%d\n",sizeof(intMidBytes_Length));
 	lce->resMidBitsLength = resiMidBitsLength;
+	// printf("resiMidBitsLength:%d\n",sizeof(resiMidBitsLength));
 	lce->residualMidBits = resiBits;
+	// printf("resiBits:%d\n",sizeof(resiBits));
 }
 
 void updateLossyCompElement_Double(unsigned char* curBytes, unsigned char* preBytes,
 		int reqBytesLength, int resiBitsLength,  LossyCompressionElement *lce)
 {
 	int i, resiIndex, intMidBytes_Length = 0;
-	int leadingNum = compIdenticalLeadingBytesCount_double(preBytes, curBytes); //in fact, float is enough for both single-precision and double-precisiond ata.
+	int leadingNum = compIdenticalLeadingBytesCount_double(preBytes, curBytes); //in fact, float is enough for both single-precision and double-precisiond data.
 	int fromByteIndex = leadingNum;
 	int toByteIndex = reqBytesLength; //later on: should use "< toByteIndex" to tarverse....
 	// printf("reqBytesLength=%d\n", reqBytesLength);

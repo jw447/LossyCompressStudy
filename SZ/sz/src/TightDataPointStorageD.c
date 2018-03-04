@@ -1368,7 +1368,7 @@ void new_TightDataPointStorageD(TightDataPointStorageD **this,
 	(*this)->realPrecision = realPrecision;
 	(*this)->medianValue = medianValue;
 	(*this)->reqLength = reqLength;
-
+	// printf("----------%ld\n",sizeof(TightDataPointStorageD));
 	(*this)->dataSeriesLength = dataSeriesLength;
 	(*this)->exactDataNum = exactDataNum;
 

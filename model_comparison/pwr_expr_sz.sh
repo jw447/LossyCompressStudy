@@ -143,8 +143,8 @@ runsz(){
     echo input file size: $inputFILESIZE
     echo output file size: $outputFILESIZE
     echo "$inputFILESIZE $outputFILESIZE" | awk '{printf "sz compression ratio, %.2f \n", $1/$2}'
-    ../SZ/example/testdouble_decompress ${cfg} $i.sz $sze
-    ../compareData $i $i.sz.out $sze
+    # ../SZ/example/testdouble_decompress ${cfg} $i.sz $sze
+    # ../compareData $i $i.sz.out $sze
 }
 
 while getopts ":c:e:i:t:" o; do           # e is for different pwr_errorbound

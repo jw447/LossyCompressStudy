@@ -25,23 +25,24 @@
 void compute_segment_precisions_double_1D(double *oriData, int dataLength,double pwr_err, double* pwrErrBound, unsigned char* pwrErrBoundBytes)
 {
 	int i = 0, j = 0, k = 0;
-	printf("pw_relBoundRatio=%f\n",pwr_err); // used to be pw_relBoundRatio
-	double realPrecision = oriData[0]!=0?fabs(pwr_err*oriData[0]):pwr_err; //precision = origin[0] * pwr_err
+	// printf("pw_relBoundRatio=%f\n",pwr_err); // used to be pw_relBoundRatio
+	double realPrecision = oriData[0]!=0?fabs(pwr_err*oriData[0]):pwr_err; //initialize a precision = origin[0] * pwr_err
 	double approxPrecision;
 	unsigned char realPrecBytes[8];
 	double curPrecision;
 	double curValue;
-	for(i=0;i<dataLength;i++)
+	for(i=0;i<dataLength;i++) // for all data
 	{
 		curValue = oriData[i];
-		if(i%segment_size==0&&i>0)
+		if(i%segment_size==0&&i>0)  // if current value is the first of current segmentation
 		{
-			//get two first bytes of the realPrecision
+			//get two first bytes of therealPrecision realPrecision
 			doubleToBytes(realPrecBytes, realPrecision);
-			memset(&realPrecBytes[2], 0, 6);
+			// why replace?
+			memset(&realPrecBytes[2], 0, 6); // replace with 0 from [2], replace 6 of them to the end
 			approxPrecision = bytesToDouble(realPrecBytes);
 			//put the realPrecision in float* pwrErBound
-			pwrErrBound[j++] = approxPrecision;
+			pwrErrBound[j++] = approxPrecision; // this is float number instead of double
 			//put the two bytes in pwrErrBoundBytes
 			pwrErrBoundBytes[k++] = realPrecBytes[0];
 			pwrErrBoundBytes[k++] = realPrecBytes[1];
@@ -64,15 +65,20 @@ void compute_segment_precisions_double_1D(double *oriData, int dataLength,double
 	pwrErrBoundBytes[k++] = realPrecBytes[1];
 }
 
-unsigned int optimize_intervals_double_1D_pwr(double *oriData, int dataLength, double* pwrErrBound)
+// not understanded
+unsigned int optimize_intervals_double_1D_pwr(double *oriData, int dataLength,
+	double* pwrErrBound)
 {
 	int i = 0, j = 0;
 	double realPrecision = pwrErrBound[j++];
 	unsigned long radiusIndex;
 	double pred_value = 0, pred_err;
+	// printf("maxRangeRadius=%d\n",maxRangeRadius);//32768 decided in sz.c
 	int *intervals = (int*)malloc(maxRangeRadius*sizeof(int));
-	memset(intervals, 0, maxRangeRadius*sizeof(int));
+	memset(intervals, 0, maxRangeRadius*sizeof(int)); // all 0
+	// printf("sampleDistance=%d\n",sampleDistance); // 10?
 	int totalSampleSize = dataLength/sampleDistance;
+	// printf("totalSampleSize=%d\n",totalSampleSize);
 	for(i=2;i<dataLength;i++)
 	{
 		if(i%segment_size==0)
@@ -89,7 +95,10 @@ unsigned int optimize_intervals_double_1D_pwr(double *oriData, int dataLength, d
 		}
 	}
 	//compute the appropriate number
-	int targetCount = (int)(totalSampleSize*predThreshold);
+
+	int targetCount = (int)(totalSampleSize*predThreshold); // threshold = 0.99
+	// printf("targetCount=%d\n",targetCount);
+	// printf("predThreshold=%f\n",predThreshold);
 	int sum = 0;
 	for(i=0;i<maxRangeRadius;i++)
 	{
@@ -99,6 +108,7 @@ unsigned int optimize_intervals_double_1D_pwr(double *oriData, int dataLength, d
 	}
 	if(i>=maxRangeRadius)
 		i = maxRangeRadius-1;
+	// printf("i=%d\n",i);
 	unsigned int accIntervals = 2*(i+1);
 	unsigned int powerOf2 = roundUpToPowerOf2(accIntervals);
 
@@ -400,32 +410,36 @@ void SZ_compress_args_double_NoCkRngeNoGzip_1D_pwr(unsigned char** newByteData, 
 int dataLength, int *outSize, double min, double max)
 {
 	SZ_Reset();
-	//printf("datalength=%d\n",dataLength);
-	int pwrLength = dataLength%segment_size==0?dataLength/segment_size:dataLength/segment_size+1;
-	printf("pwrLength=%d\n",pwrLength);
-	double* pwrErrBound = (double*)malloc(sizeof(double)*pwrLength);
+	int pwrLength = dataLength%segment_size==0?dataLength/segment_size:dataLength/segment_size+1; // array length of point-wise relative errorbound
+	double* pwrErrBound = (double*)malloc(sizeof(double)*pwrLength); // array of point-wise relative errorbound for each segment
 	int pwrErrBoundBytes_size = sizeof(unsigned char)*pwrLength*2;
-	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
 	unsigned char* pwrErrBoundBytes = (unsigned char*)malloc(pwrErrBoundBytes_size);
 
+	// oridata is the input data, datalength is the number of data points, pwr_err is the required point-wise
+	// errorbound, pwrErrBound is the output of errorbound for each segment, pwrErrBoundBytes is the byte[0]/[1] of pwrErrBound
 	compute_segment_precisions_double_1D(oriData, dataLength, pwr_err, pwrErrBound, pwrErrBoundBytes);
-
+	printf("PointCnt=%d\n",dataLength);
 	unsigned int quantization_intervals;
 	if(optQuantMode==1)
 	{
 		quantization_intervals = optimize_intervals_double_1D_pwr(oriData, dataLength, pwrErrBound);
 		updateQuantizationInfo(quantization_intervals);
+		// intvCapacity = quant_intervals;
+		// intvRadius = quant_intervals/2;
+		printf("quantization_intervals=%d\n",quantization_intervals);
 	}
 	else
 		quantization_intervals = intvCapacity;
 	//clearHuffmanMem();
+	// printf("intvCapacity=%d\n",intvCapacity);
+	// printf("intvRadius=%d\n",intvRadius);
 	int i = 0, j = 0, reqLength;
 	double realPrecision = pwrErrBound[j++];
 	double medianValue = 0;
 	double radius = fabs(max)<fabs(min)?fabs(min):fabs(max);
 	short radExpo = getExponent_double(radius);
 
-	computeReqLength_double(realPrecision, radExpo, &reqLength, &medianValue);
+	computeReqLength_double(realPrecision, radExpo, &reqLength, &medianValue);  // required length of? [12, 64]
 
 	int* type = (int*) malloc(dataLength*sizeof(int));
 	//type[dataLength]=0;
@@ -455,7 +469,7 @@ int dataLength, int *outSize, double min, double max)
 
 	DoubleValueCompressElement *vce = (DoubleValueCompressElement*)malloc(sizeof(DoubleValueCompressElement));
 	LossyCompressionElement *lce = (LossyCompressionElement*)malloc(sizeof(LossyCompressionElement));
-
+	// printf("sizeof lossy element=%ld\n",sizeof(lce));
 	//add the first data
 	addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
 	compressSingleDoubleValue(vce, spaceFillingValue[0], realPrecision, medianValue, reqLength, reqBytesLength, resiBitsLength);
@@ -488,8 +502,10 @@ int dataLength, int *outSize, double min, double max)
 	int updateReqLength = 0; //a marker: 1 means already updated
 
 	int hit = 0;
-	int miss = 0;
-
+	int miss = 2; // first two values are not hit.
+	int reqBits = 0;
+	// int missB = 0;
+	// int missb = 0;
 	//printf("datalength=%d\n",dataLength);
 	//printf("----------factors\n");
 	//int outlierSize = 0;
@@ -508,28 +524,36 @@ int dataLength, int *outSize, double min, double max)
 
 		pred = 2*last3CmprsData[0] - last3CmprsData[1];
 		//pred = last3CmprsData[0];
-
+		// printf("******************************\n");
 		predAbsErr = fabs(curData - pred);
+		// printf("predAbsErr=%d\n",predAbsErr);
 		if(predAbsErr<checkRadius)
 		{
 			state = (predAbsErr/realPrecision+1)/2;
+			// printf("state=%d\n",state);
+
 			hit = hit + 1;
 			if(curData>=pred)
 			{
 				type[i] = intvRadius+state;
+				// printf(">\n");
 				pred = pred + state*interval;
+
 			}
 			else //curData<pred
 			{
 				type[i] = intvRadius-state;
+				// printf("<\n");
 				pred = pred - state*interval;
 			}
+			// printf("pred=%d\n",pred);
+			printf("%d\n",type[i]);
 			//printf("%d\n",type[i]);
 			// printf("pred=%f\n",pred);
 			listAdd_double(last3CmprsData, pred);
 			continue;
 		}
-
+		// printf("--------------------------------\n");
 		//unpredictable data processing
 		if(updateReqLength==0)
 		{
@@ -537,29 +561,41 @@ int dataLength, int *outSize, double min, double max)
 			reqBytesLength = reqLength/8;
 			resiBitsLength = reqLength%8;
 			updateReqLength = 1;
-			// printf("reqBytesLength=%d\n",reqBytesLength);
+			// printf("reqLength=%d\n",reqLength);
 		}
-
+		reqBits += reqLength;
+		// printf("------reqLength=%d\n",reqLength);
 		miss = miss + 1;
 		type[i] = 0;
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
 		//printf("reqLength=%d\n",reqLength);
 		compressSingleDoubleValue(vce, curData, realPrecision, medianValue, reqLength, reqBytesLength, resiBitsLength);
 		updateLossyCompElement_Double(vce->curBytes, preDataBytes, reqBytesLength, resiBitsLength, lce);
+		// printf("reqBytesLength=%d\n",reqBytesLength);
+		// printf("resiBitsLength=%d\n",resiBitsLength);
 		//outlierSize = outlierSize +
 		memcpy(preDataBytes,vce->curBytes,4);
 		addExactData(exactMidByteArray, exactLeadNumArray, resiBitArray, lce);
-
+		// missB += reqBytesLength;
+		// missb += resiBitsLength;
 		listAdd_double(last3CmprsData, vce->data);
 	}//end of for
 	//printf("----------\n");
 	printf("hit: %d\n",hit);
 	printf("miss: %d\n",miss);
+	printf("hitRatio: %f\n",(float)hit/(float)dataLength);
+	// printf("------reqBits=%d\n",reqBits);
+	printf("outlierSize: %d\n",reqBits/8);
+	// printf("B=%d\n", missB);
+	// printf("b=%d\n", missb);
 	//printf("outlierSize: %d\n", outlierSize);
-
+	// printf("sizeof lossy element=%ld\n",sizeof(*lce));
 	//	char* expSegmentsInBytes;
 	//	int expSegmentsInBytes_size = convertESCToBytes(esc, &expSegmentsInBytes);
-	int exactDataNum = exactLeadNumArray->size;
+	int exactDataNum = exactLeadNumArray->size; // number of missing data
+	// printf("exactLeadNumArray=%d\n",sizeof(exactLeadNumArray));
+	// printf("exactMidByteArray=%d\n",sizeof(exactMidByteArray));
+	// printf("resiBitArray=%d\n",sizeof(resiBitArray));
 
 	TightDataPointStorageD* tdps;
 	// printf("2\n");
@@ -569,18 +605,18 @@ int dataLength, int *outSize, double min, double max)
 			resiBitArray->array, resiBitArray->size,
 			resiBitLengthArray->array, resiBitLengthArray->size,
 			realPrecision, medianValue, (char)reqLength, quantization_intervals, pwrErrBoundBytes, pwrErrBoundBytes_size, radExpo);
-	printf("-------insight of tdps\n");
-	printf("dataLength=%d\n",dataLength);
-	printf("exactDataNum=%d\n",exactDataNum);
-	//printf("type=%d\n",type);
-	printf("realPrecision=%f\n",realPrecision);
-	printf("medianValue=%f\n",medianValue);
-	printf("reqLength=%d\n",reqLength);
-	printf("quantization_intervals=%d\n",quantization_intervals);
-	//printf("pwrErrBoundBytes=%d\n",pwrErrBoundBytes);
-	printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
-	printf("radExpo=%d\n",radExpo);
-	printf("-----------------------\n");
+	// printf("-------insight of tdps\n");
+	// printf("dataLength=%d\n",dataLength);
+	// printf("exactDataNum=%d\n",exactDataNum);
+	// //printf("type=%d\n",type);
+	// printf("realPrecision=%f\n",realPrecision);
+	// printf("medianValue=%f\n",medianValue);
+	// printf("reqLength=%d\n",reqLength);
+	// printf("quantization_intervals=%d\n",quantization_intervals);
+	// //printf("pwrErrBoundBytes=%d\n",pwrErrBoundBytes);
+	// printf("pwrErrBoundBytes_size=%d\n",pwrErrBoundBytes_size);
+	// printf("radExpo=%d\n",radExpo);
+	// printf("-----------------------\n");
 	//free memory
 	free_DBA(resiBitLengthArray);
 	free_DIA(exactLeadNumArray);
@@ -588,10 +624,18 @@ int dataLength, int *outSize, double min, double max)
 	free(type);
 
 	convertTDPStoFlatBytes_double(tdps, newByteData, outSize);
+	// printf("tdps=%d\n",sizeof(tdps));
+	// printf("?=%d\n",exactMidByteArray->size);
+	// printf("?=%d\n",resiBitArray->size);
+	// printf("?=%d\n",resiBitLengthArray->size);
+	// printf("?=%d\n",pwrErrBoundBytes_size);
 
+	printf("/outSize/=%d\n",*outSize);
 	int doubleSize=sizeof(double);
+	// printf("-----%d\n",doubleSize*dataLength);
 	if(*outSize>dataLength*doubleSize)
 	{
+		// printf("yes\n");
 		int k = 0, i;
 		tdps->isLossless = 1;
 		int totalByteLength = 3 + 4 + 1 + doubleSize*dataLength;
@@ -615,7 +659,7 @@ int dataLength, int *outSize, double min, double max)
 		}
 		*outSize = totalByteLength;
 	}
-
+	// printf("%d\n",outSize);
 	free(pwrErrBound);
 
 	free(vce);

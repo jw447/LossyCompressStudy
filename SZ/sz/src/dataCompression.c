@@ -244,6 +244,7 @@ void compressSingleDoubleValue(DoubleValueCompressElement *vce, double tgtValue,
 	vce->curValue = tmp_long;
 	vce->reqBytesLength = reqBytesLength;
 	vce->resiBitsLength = resiBitsLength;
+	// printf("vce:%d\n",sizeof(*vce));
 }
 
 int compIdenticalLeadingBytesCount_double(unsigned char* preBytes, unsigned char* curBytes)
