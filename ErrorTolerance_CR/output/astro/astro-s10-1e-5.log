@@ -1,0 +1,19 @@
+current pwr_bound is 1e-5
+cfgFile=sz.config
+[SZ] Reading SZ configuration file (sz.config) ...
+PointCnt=6520
+quantization_intervals=131072
+hit: 6517
+miss: 3
+hitRatio: 0.999540
+outlierSize: 3
+nodecount=2915
+treeByteSize=26236
+enCodeSize=4931
+/outSize/=31641
+gZIP Compression output size: 16935
+timecost, 0.120620, seconds
+done
+input file size: 52160
+output file size: 16935
+sz compression ratio, 3.08 

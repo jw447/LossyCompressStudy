@@ -547,7 +547,7 @@ int dataLength, int *outSize, double min, double max)
 				pred = pred - state*interval;
 			}
 			// printf("pred=%d\n",pred);
-			printf("%d\n",type[i]);
+			// printf("%d\n",type[i]);
 			//printf("%d\n",type[i]);
 			// printf("pred=%f\n",pred);
 			listAdd_double(last3CmprsData, pred);
