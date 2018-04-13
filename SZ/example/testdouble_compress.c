@@ -54,6 +54,7 @@ int main(int argc, char * argv[])
 
     // if(argc>=4)
     r1 = atoi(argv[4]); //file size
+    // printf("r1=%d\n",r1);
     // if(argc>=5)
     // 	r2 = atoi(argv[4]); //8
     // if(argc>=6)
@@ -63,13 +64,17 @@ int main(int argc, char * argv[])
     // if(argc>=8)
 	  //   r5 = atoi(argv[7]);
 
-    printf("cfgFile=%s\n", cfgFile);
+    // printf("cfgFile=%s\n", cfgFile);
     int status = SZ_Init(cfgFile);
-
+    // printf(">intvRadius=%d\n",intvRadius);
     sprintf(outputFilePath, "%s.sz", oriFilePath);
 
     int nbEle;
     double *data = readDoubleData(oriFilePath, &nbEle, &status);
+    // double data[20] = {1.0,5.0,10.0,20.0,15.0,1.0,20.0,50.0,20.0,5.0,1.0,15.0,10.0,15.0,5.0,10.0,15.0,10.0,15.0,1.0};
+    // for(int i = 0;i<=20;i++){
+    //   printf("%f\n",data[i]);
+    // }
     if(status!=SZ_SCES)
     {
     	printf("Error: file %s cannot be read!\n", oriFilePath);
@@ -80,12 +85,11 @@ int main(int argc, char * argv[])
     cost_start();
     char* ptr;
     double pwr_err = strtod(argv[2], &ptr);
-
     unsigned char *bytes = SZ_compress(SZ_DOUBLE, data, pwr_err, &outSize, r5, r4, r3, r2, r1);
     //char *bytes = (char *)malloc(nbEle*sizeof(double)); //
     //char* bytes = SZ_compress_args(SZ_DOUBLE, data, &outSize, ABS, 1E-12, 0.000001, r5, r4, r3, r2, r1);
     cost_end();
-    printf("timecost, %f, seconds\n",totalCost);
+    // printf("timecost, %f, seconds\n",totalCost);
     // printf("-example outSize- = %d\n",outSize);
     writeByteData(bytes, outSize, outputFilePath, &status);
     // printf("bytes = %d\n",sizeof(bytes));
@@ -96,9 +100,9 @@ int main(int argc, char * argv[])
     	free(data);
     	exit(0);
     }
-    free(data);
+    // free(data);
     free(bytes);
-    printf("done\n");
+    // printf("done\n");
 
     SZ_Finalize();
 

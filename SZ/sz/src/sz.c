@@ -97,91 +97,75 @@ void SZ_Reset()
 
 int SZ_Init_Params(sz_params *params)
 {
-	conf_params = params;
+		conf_params = params;
     int x = 1;
     char *y = (char*)&x;
     int endianType = BIG_ENDIAN_SYSTEM;
     if(*y==1) endianType = LITTLE_ENDIAN_SYSTEM;
 
     // set default values
-    if(params->max_quant_intervals)
-    {
-		maxRangeRadius = params->max_quant_intervals/2;
-    	stateNum = maxRangeRadius*2;
-		allNodes = maxRangeRadius*4;
-		intvCapacity = maxRangeRadius*2;
-		intvRadius = maxRangeRadius;
+    if(params->max_quant_intervals){
+			maxRangeRadius = params->max_quant_intervals/2;
+	    stateNum = maxRangeRadius*2;
+			allNodes = maxRangeRadius*4;
+			intvCapacity = maxRangeRadius*2;
+			// printf("sz-init-intvCapacity=%f\n",intvCapacity);
+			intvRadius = maxRangeRadius;
+			// printf("1,%d\n",intvRadius);
     }
-    dataEndianType    = endianType;
+
+    dataEndianType   = endianType;
     sysEndianType    = endianType;
-    sol_ID                    = SZ;
-    offset                    = 0;
-    gzipMode               = Z_BEST_SPEED;
+    sol_ID           = SZ;
+    offset           = 0;
+    gzipMode         = Z_BEST_SPEED;
     sampleDistance = 50;
     predThreshold = 0.97;
-    errorBoundMode    = REL;
-    absErrBound         = 0.000001;
-    relBoundRatio         = 0.001;
+    errorBoundMode   = REL;
+    absErrBound      = 0.000001;
+    relBoundRatio    = 0.001;
     szMode = SZ_BEST_COMPRESSION;
 
     // set values from function arguments if avail.
     // [ENV]
-    if(params->dataEndianType >= 0) dataEndianType    = params->dataEndianType;
-    if(params->sysEndianType >= 0)    sysEndianType    = params->sysEndianType;
-    if(params->sol_ID >= 0)                sol_ID                    = params->sol_ID;
+    if(params->dataEndianType >= 0) dataEndianType   = params->dataEndianType;
+    if(params->sysEndianType >= 0)  sysEndianType    = params->sysEndianType;
+    if(params->sol_ID >= 0)         sol_ID           = params->sol_ID;
 
     // [PARAMETER]
-    if(sol_ID==SZ) {
-        if(params->offset >= 0) offset = params->offset;
+    if(sol_ID==SZ){
 
-        /* gzipModes:
-            Gzip_NO_COMPRESSION=0,
-            Gzip_BEST_SPEED=1,
-            Gzip_BEST_COMPRESSION=9,
-            Gzip_DEFAULT_COMPRESSION=-1 */
-        if(params->gzipMode >= -1) gzipMode = params->gzipMode;
+			// printf("->%d\n",params->quantization_intervals);
+      if(params->offset >= 0) offset = params->offset;
+      if(params->gzipMode >= -1) gzipMode = params->gzipMode;
+			if(params->szMode >= 0) szMode = params->szMode;
+      if( params->errorBoundMode >= 0)  errorBoundMode =  params->errorBoundMode;
 
-		if(params->szMode >= 0) szMode = params->szMode;
-        //if(params->maxSegmentNum >= 0) maxSegmentNum = params->maxSegmentNum;
-        //if(params->spaceFillingCurveTransform >= 0) spaceFillingCurveTransform = params->spaceFillingCurveTransform;
-        //if(params->reOrgSize >= 0) reOrgSize = params->reOrgSize;
+      if(params->absErrBound >= 0) absErrBound = params->absErrBound;
+      if(params->relBoundRatio >= 0) relBoundRatio = params->relBoundRatio;
+			if(params->quantization_intervals>0)
+			{
+				updateQuantizationInfo(params->quantization_intervals);
+				optQuantMode = 0;
+				// printf("2,%d\n",intvRadius);
+			}
+			else
+				optQuantMode = 1;
+			if(params->layers >= 0)
+				layers = params->layers;
+			if(params->sampleDistance >= 0)
+				sampleDistance = params->sampleDistance;
+			if(params->predThreshold > 0)
+				predThreshold = params->predThreshold;
+	    }
 
-        /* errBoundModes:
-            ABS = 0
-            REL = 1
-            ABS_AND_REL =2
-            ABS_OR_REL = 3 */
-        if( params->errorBoundMode >= 0)  errorBoundMode =  params->errorBoundMode;
-
-        if(params->absErrBound >= 0) absErrBound = params->absErrBound;
-        if(params->relBoundRatio >= 0) relBoundRatio = params->relBoundRatio;
-		if(params->quantization_intervals>0)
-		{
-			updateQuantizationInfo(params->quantization_intervals);
-			optQuantMode = 0;
-		}
-		else
-			optQuantMode = 1;
-		if(params->layers >= 0)
-			layers = params->layers;
-		if(params->sampleDistance >= 0)
-			sampleDistance = params->sampleDistance;
-		if(params->predThreshold > 0)
-			predThreshold = params->predThreshold;
-    }
-
-	//	versionNumber[0] = SZ_VER_MAJOR; //0
-	//	versionNumber[1] = SZ_VER_MINOR; //5
-	//	versionNumber[2] = SZ_VER_REVISION; //15
-
-	if(params->quantization_intervals%2!=0)
-	{
-		printf("Error: quantization_intervals must be an even number!\n");
-		return SZ_NSCS;
-	}
+			if(params->quantization_intervals%2!=0){
+				printf("Error: quantization_intervals must be an even number!\n");
+				return SZ_NSCS;
+			}
 
     //initialization for Huffman encoding
-	SZ_Reset();
+		SZ_Reset();
 
     return SZ_SCES;
 }
@@ -327,7 +311,7 @@ unsigned char *SZ_compress(int dataType, void *data, double pwr_er, int *outSize
 	int pointCount;
 	pointCount = computeDataLength(r5,r4,r3,r2,r1);
 
-
+	// printf("pointCount=%d\n",pointCount);
 	unsigned char *newByteData = SZ_compress_args(dataType, data, pwr_er, outSize, errorBoundMode, absErrBound, relBoundRatio, r5, r4, r3, r2, r1);
 	// printf("szcompress size: %d\n",*outSize);
 	// printf("bytedata = %d\n",sizeof(newByteData));

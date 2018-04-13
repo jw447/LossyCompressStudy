@@ -134,15 +134,16 @@ usage() { echo "Usage: $0 [-c <zfp|fpc|sz|isb>] [-i <inputfile>] [-t <outputfile
 # }
 
 runsz(){
-    echo current pwr_bound is $e
+    # echo current pwr_bound is $e
     inputFILESIZE=$(stat -c%s "$i")
     sze=`expr $inputFILESIZE / 8`
-
-    ../SZ/example/testdouble_compress ${cfg} $e $i $sze
+    echo $inputFILESIZE
+    echo $sze
+    /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_compress ${cfg} $e $i $sze
     outputFILESIZE=$(stat -c%s "$i.sz")
-    echo input file size: $inputFILESIZE
-    echo output file size: $outputFILESIZE
-    echo "$inputFILESIZE $outputFILESIZE" | awk '{printf "sz compression ratio, %.2f \n", $1/$2}'
+    # echo input file size: $inputFILESIZE
+    # echo output file size: $outputFILESIZE
+    # echo "$inputFILESIZE $outputFILESIZE" | awk '{printf "sz compression ratio, %.2f \n", $1/$2}'
     # ../SZ/example/testdouble_decompress ${cfg} $i.sz $sze
     # ../compareData $i $i.sz.out $sze
 }

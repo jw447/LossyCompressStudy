@@ -1021,14 +1021,11 @@ int errBoundMode, double absErr_Bound, double relBoundRatio)
 	int status = SZ_SCES;
 	int dataLength = computeDataLength(r5,r4,r3,r2,r1);
 	double valueRangeSize = 0, medianValue = 0;
-	//printf("errBoundMode=%d\n",errBoundMode);
-	//printf("relBoundRatio=%f\n",relBoundRatio);
-	//printf("absErr_Bound=%f\n",absErr_Bound);
 	double min = computeRangeSize_double(oriData, dataLength, &valueRangeSize, &medianValue);
 	double max = min+valueRangeSize;
 	double realPrecision = getRealPrecision_double(valueRangeSize, errBoundMode, absErr_Bound, relBoundRatio, &status);
 	//printf("realPrecision=%f\n",realPrecision);
-
+//  printf("maxRangeRadius=%d\n",maxRangeRadius);
 	if(valueRangeSize <= realPrecision)
 	{
 		SZ_compress_args_double_withinRange(newByteData, oriData, dataLength, outSize);
@@ -1093,7 +1090,7 @@ int errBoundMode, double absErr_Bound, double relBoundRatio)
 			status = SZ_MERR;
 		}
 	}
-	printf("gZIP Compression output size: %d\n",*outSize);
+	// printf("gZIP Compression output size: %d\n",*outSize);
 	SZ_ReleaseHuffman();
 	return status;
 }

@@ -1,0 +1,14 @@
+dataLength=20694
+quantization_intervals=2097152
+hitRatio: 0.200783
+outlierSize?: 110646
+hit=4155
+miss=16539
+nodecount=3
+treeByteSize=22
+enCodeSize=2587
+outSize=2613
+gZIP Compression output size: 100652
+input file size: 165552
+output file size: 100652
+sz compression ratio, 1.64 

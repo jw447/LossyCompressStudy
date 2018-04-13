@@ -49,6 +49,7 @@ void updateQuantizationInfo(int quant_intervals)
 	//stateNum = quant_intervals;
 	intvCapacity = quant_intervals;
 	intvRadius = quant_intervals/2;
+  // printf("intvRadius=%d\n",intvRadius);
 }
 
 void clearHuffmanMem()
@@ -79,7 +80,7 @@ int SZ_ReadConf() {
   char *endianTypeString;
   dictionary *ini;
   char *par;
-  printf("[SZ] Reading SZ configuration file (%s) ...\n", sz_cfgFile);
+  // printf("[SZ] Reading SZ configuration file (%s) ...\n", sz_cfgFile);
   if (access(sz_cfgFile, F_OK) != 0)
   {
       printf("[SZ] Configuration file NOT accessible.\n");
@@ -144,7 +145,7 @@ int SZ_ReadConf() {
 
 		intvCapacity = maxRangeRadius*2;
 		intvRadius = maxRangeRadius;
-
+    //printf("maxRangeRadius=%d\n",maxRangeRadius);
 		int quantization_intervals = (int)iniparser_getint(ini, "PARAMETER:quantization_intervals", 0);
 		conf_params->quantization_intervals = quantization_intervals;
 		if(quantization_intervals>0)

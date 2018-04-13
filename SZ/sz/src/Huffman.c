@@ -619,7 +619,7 @@ void encode_withTree(int *s, int length, unsigned char **out, int *outSize)
 	for (i = 0; i < stateNum; i++)
 		if (code[i]) nodeCount++;
 	nodeCount = nodeCount*2-1; // treenode = leafnode * 2 - 1
-	printf("nodecount=%d\n",nodeCount);
+	// printf("nodecount=%d\n",nodeCount);
 	unsigned int treeByteSize = convert_HuffTree_to_bytes_anyStates(nodeCount, &treeBytes);
 
 	*out = (unsigned char*)malloc(length*sizeof(int)+treeByteSize);
@@ -631,9 +631,9 @@ void encode_withTree(int *s, int length, unsigned char **out, int *outSize)
 	encode(s, length, *out+4+treeByteSize, &enCodeSize);
 	*outSize = 4+treeByteSize+enCodeSize;
 	// printf("nodeS=%d\n",length*sizeof(int));
-	printf("treeByteSize=%d\n", treeByteSize);
+	// printf("treeByteSize=%d\n", treeByteSize);
 	// printf("length=%d\n",length);
-	printf("enCodeSize=%d\n", enCodeSize);
+	// printf("enCodeSize=%d\n", enCodeSize);
 	// printf("enCodeSize=%d\n", length*sizeof(char));
 	// printf("outSize=%d\n",  4+treeByteSize+enCodeSize);
 	//unsigned short state[length];
