@@ -6,7 +6,9 @@ This paper aims to analyze, understand, and estimate the reduction performance. 
 
 ## Getting Started
 
+```
 Please make sure SZ is configured properly and Python3 is installed for data analysis.
+```
 
 # Compression Ratio Estimation
 
