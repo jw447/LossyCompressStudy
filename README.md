@@ -6,15 +6,16 @@ This paper aims to analyze, understand, and estimate the reduction performance. 
 
 ## Getting Started
 
-```
+
 Please make sure SZ is configured properly and Python3 is installed for data analysis.
-```
 
 # Compression Ratio Estimation
 
 1. baisc SZ Compression
 
+```
 ./run.sh -c sz -i testdouble\_8\_8\_128.dat
+```
 
 2. Compression at certain error bounds
 
