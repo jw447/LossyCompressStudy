@@ -633,7 +633,7 @@ void encode_withTree(int *s, int length, unsigned char **out, int *outSize)
 	// printf("nodeS=%d\n",length*sizeof(int));
 	// printf("treeByteSize=%d\n", treeByteSize);
 	// printf("length=%d\n",length);
-	// printf("enCodeSize=%d\n", enCodeSize);
+	printf("enCodeSize=%d\n", enCodeSize);
 	// printf("enCodeSize=%d\n", length*sizeof(char));
 	// printf("outSize=%d\n",  4+treeByteSize+enCodeSize);
 	//unsigned short state[length];

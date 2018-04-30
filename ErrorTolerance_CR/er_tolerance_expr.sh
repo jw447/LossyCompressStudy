@@ -16,7 +16,7 @@ for i in $List; do
     echo The current point-wise errorbound is $i
     # ../CompressionEstimation/pwr_expr_sz.sh -c sz -e $i -i "../CompressionEstimation/inputdata/sample_1/$f.dat" > "./$f/$f-s1-$i.log"
     # ../CompressionEstimation/pwr_expr_sz.sh -c sz -e $i -i "../CompressionEstimation/inputdata/sample_10/$f.dat" > "./$f/$f-s10-$i.log"
-    ./pwr_expr_sz.sh -c sz -e $i -i "../CompressionEstimation/inputdata/original/$f.dat" > "./output/cr_estimation_cfg/cr_estimation/$f-$i-qf.txt"
+    ./pwr_expr_sz.sh -c sz -e $i -i "../CompressionEstimation/inputdata/original/$f.dat" > "./output/cr_estimation_cfg/CR_REA_ENCODE/$f-$i-qf.txt"
 
  done
 done

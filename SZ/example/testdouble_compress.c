@@ -92,6 +92,7 @@ int main(int argc, char * argv[])
     // printf("timecost, %f, seconds\n",totalCost);
     // printf("-example outSize- = %d\n",outSize);
     writeByteData(bytes, outSize, outputFilePath, &status);
+    printf("outsize=%d\n",outSize);
     // printf("bytes = %d\n",sizeof(bytes));
 
     if(status!=SZ_SCES)

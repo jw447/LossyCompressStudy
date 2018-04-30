@@ -1,0 +1,3 @@
+enCodeSize=9768
+outsize=14735
+output file size: 14735

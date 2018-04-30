@@ -1,0 +1,3 @@
+pwr:169259
+outsize=169259
+output file size: 169259

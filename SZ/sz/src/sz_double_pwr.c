@@ -585,7 +585,7 @@ int dataLength, int *outSize, double min, double max)
 			if(curData>=pred)
 			{
 				type[i] = intvRadius+state;
-				printf("%d\n",type[i]);
+				// printf("%d\n",type[i]);
 				// printf(">\n");
 				pred = pred + state*interval;
 				// printf("pred_updated:%f\n",pred);
@@ -593,7 +593,7 @@ int dataLength, int *outSize, double min, double max)
 			else //curData<pred
 			{
 				type[i] = intvRadius-state;
-				printf("%d\n",type[i]);
+				// printf("%d\n",type[i]);
 				// printf("type[i]:%d\n",type[i]);
 				// printf("<\n");
 				pred = pred - state*interval;
@@ -619,7 +619,7 @@ int dataLength, int *outSize, double min, double max)
 		// printf("Miss\n");
 		miss = miss + 1;
 		type[i] = 0;
-		printf("%d\n",type[i]);
+		// printf("%d\n",type[i]);
 		// printf("+++++++++++++++++++++++++\n");
 
 		addDBA_Data(resiBitLengthArray, (unsigned char)resiBitsLength);
@@ -719,7 +719,7 @@ int dataLength, int *outSize, double min, double max)
 		}
 		*outSize = totalByteLength;
 	}
-	// printf("%d\n",outSize);
+	// printf("pwr:%d\n",*outSize);
 	free(pwrErrBound);
 
 	free(vce);

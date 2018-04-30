@@ -142,7 +142,7 @@ runsz(){
     /home/jon/PhD_hpc/LossyCompressStudy/SZ/example/testdouble_compress ${cfg} $e $i $sze
     outputFILESIZE=$(stat -c%s "$i.sz")
     # echo input file size: $inputFILESIZE
-    # echo output file size: $outputFILESIZE
+    echo output file size: $outputFILESIZE
     # echo "$inputFILESIZE $outputFILESIZE" | awk '{printf "sz compression ratio, %.2f \n", $1/$2}'
     # ../SZ/example/testdouble_decompress ${cfg} $i.sz $sze
     # ../compareData $i $i.sz.out $sze
