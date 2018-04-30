@@ -1,21 +1,41 @@
-#A study of lossy compression schemes
+# Understanding and Extrapolating Compression Ratios of HPC Scientific Data
 
-##By Tao Lu
+Scientific simulations on high-performance computing (HPC) systems generate vast amounts of floating-point data that need to be reduced in order to lower the I/O cost. Lossy compressors trade accuracy for performance, and were demonstrated to be effective in reducing data volume. However, a key hurdle to a wide adoption of lossy compressors is that the reduction performance is not well understood, in particular, the trade-off between accuracy and the associated performance. The consequence is that domain scientists often need to exhaust all error bounds before they can figure the most cost-effective setup. As a result, the current practice of using lossy compressions to compress datasets is through trial and error, which is not efficient for large datasets.
 
-Scientific simulations generate large sums of floating-point data, which are hardly compressible using traditional data reduction methods such as deduplication and lossless compression. The emerging lossy floating-point data compression is promising to satisfy the data reduction demand of HPC systems. However, lossy compression has not been widely adopted in HPC production systems. We believe one main reason is that there lacks comprehensive evaluation of the benefits and pitfalls of conducting lossy compression on scientific data.
+This paper aims to analyze, understand, and estimate the reduction performance. In particular, we aim to extrapolate the compression ratios of SZ, a state-of-the-art lossy compressor that achieves superior performance, at various error bounds, based upon the compressor-internal metrics collected under a given error bound (i.e., base error bound). We propose a SZ compression ratio extraplolation schme based on the similarity among quantization factor distributions across a range of error bounds, and the fact that they approximately can be characterized using Gaussian distribution. We evaluate the performance extrapolation scheme using nine real HPC datasets, and the results confirm the efficacy of our approach.
 
-To expedite the landing of lossy compression on HPC production platforms, we conduct extensive evaluation on state-of-the-art lossy compression schemes, including ZFP, ISABELA, and SZ, using real and representative HPC datasets. Our eval- uation reveals the crushing influences of compressor design on compression performance. We also uncover the impact of high compression ratio on data analytics. Our evaluation provides domain scientists a good understanding of what to expect from lossy compression. Moreover, we propose compressor-aware sampling methods and build compression ratio estimation model to accurately estimate compression ratio. Considering compression consumes computation resources and not all datasets are highly compressible, the proposed compression ratio estimation mechanisms can help domain scientists or data management middleware make “compress or not” decisions.
+## Getting Started
 
+Please make sure SZ is configured properly and Python3 is installed for data analysis.
 
-1. Run the code  
+# Compression Ratio Estimation
 
-./run.sh -c gzip -i testdouble\_8\_8\_128.zfp
-
-./run.sh -c fpc -i fpc/testdouble\_8\_8\_128.dat -t file.fpc
-
-./run.sh -c zfp -i fpc/testdouble\_8\_8\_128.dat -t testdouble\_8\_8\_128.zfp
+1. baisc SZ Compression
 
 ./run.sh -c sz -i testdouble\_8\_8\_128.dat
 
-./run.sh -c isb -i fpc/testdouble\_8\_8\_128.dat -t testdouble\_8\_8\_128.isb
+2. Compression at certain error bounds
 
+```
+cd ErrorTolerance_CR
+
+# Dataset names and error bounds can be set in this script.
+./er_tolerance_expr.sh
+
+```
+make sure following data is captured:
+
+1) original data
+2) compression metrics listed in paper
+3) curve-fitting prediction error
+
+3. Result analysis
+
+```
+cd output/cr_estimation_cfg/cr_estimation
+
+```
+
+  - HitRatio_Estimate.py: function for hit ratio estimation
+  - NodeCount_Estimation.py: function for nodecount estimation
+  - CompressionRatio_esti_cfg.ipynb: conduct compression ratio estimation.
